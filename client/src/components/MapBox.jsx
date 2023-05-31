@@ -24,9 +24,19 @@ const MapBox = () => {
       minZoom: 5,
       maxZoom: 19,
     });
+    map.current.on("move", () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
   }, []);
 
-  return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;
+  return(
+//   <div>
+//     <div>{lng} - {lat}</div>
+    <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>
+//   </div>
+  );
 };
 export default MapBox;
 const MapWrapper = style.div`
