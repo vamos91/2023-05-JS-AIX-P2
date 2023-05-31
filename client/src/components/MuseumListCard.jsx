@@ -47,26 +47,24 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
             <CardTitle tag="h3">
                 {nomMusee}
             </CardTitle>
-            <CardText>
-                <Info>
-                    <AdresseBox> 
-                        <SiGooglemaps style={{marginRight:'3px'}} />  
-                        <Adresse>
-                            <li>{addresse}</li>
-                            <li>{codePostal}</li>
-                            <li>{ville}</li>
-                        </Adresse>
-                    </AdresseBox>
-                    <Box>
-                        <RiSmartphoneFill style={{marginRight:'3px'}}/>  
-                        {numeroTelphone}
-                    </Box>
-                    <Box>
-                        <BsGlobe style={{marginRight:'5px'}}/>
-                        {site}
-                    </Box>
-                </Info>
-            </CardText>
+            <Info>
+                <AdresseBox> 
+                    <SiGooglemaps style={{marginRight:'3px'}} />  
+                    <Adresse>
+                        <li>{addresse}</li>
+                        <li>{codePostal}</li>
+                        <li>{ville}</li>
+                    </Adresse>
+                </AdresseBox>
+                <Box>
+                    <RiSmartphoneFill style={{marginRight:'3px'}}/>  
+                    {numeroTelphone}
+                </Box>
+                <Box>
+                    <BsGlobe style={{marginRight:'5px'}}/>
+                    {site}
+                </Box>
+            </Info>
         </CardBody>
   </Card>
   )

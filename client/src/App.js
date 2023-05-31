@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import MuseumListCard from './components/MuseumListCard'
 import { Button } from 'reactstrap'
+import SideBarMuseums from './components/SideBarMuseums'
 
 function App() {
   const [musee, setMusee] = useState()
@@ -12,7 +13,7 @@ function App() {
   }
   return (
     <div>
-      {musee && <MuseumListCard nomMusee = {musee.fields.autnom} addresse = {musee.fields.adrl1_m} codePostal = {musee.fields.cp_m} ville = {musee.fields.ville_m  } numeroTelphone = {musee.fields.tel_m} site = {musee.fields.url_m} />}
+      {musee && <SideBarMuseums musee = {musee} />}
       <Button onClick={fetchMusee}>salut</Button>
     </div>
     
