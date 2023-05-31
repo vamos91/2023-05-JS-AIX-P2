@@ -1,9 +1,16 @@
 import React from 'react';
 import MuseumListCard from './MuseumListCard';
+import styled from 'styled-components';
+
+const SideBar = styled.div`
+    position: fixed;
+    overflow-y: scroll;
+    height: 100vh;
+`;
 
 const SideBarMuseums = ({musees}) => {
     return (
-        <>
+        <SideBar>
             {
             musees.map((musee) => (
                 <MuseumListCard 
@@ -17,7 +24,7 @@ const SideBarMuseums = ({musees}) => {
                 />
             ))
             }
-        </>
+        </SideBar>
     );
 };
 

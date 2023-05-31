@@ -14,7 +14,7 @@ function App() {
   return (
     <div>
       {musees && <SideBarMuseums musees = {musees} />}
-      <Button onClick={fetchMusee}>salut</Button>
+      <Button style={{position: 'fixed', left: '700px'}} onClick={fetchMusee}>salut</Button>
     </div>
     
   )

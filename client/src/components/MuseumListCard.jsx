@@ -6,7 +6,7 @@ import {RiSmartphoneFill} from 'react-icons/ri'
 import {BsGlobe} from 'react-icons/bs'
 
 const Image = styled.img`
-    max-width: 20vw;
+    max-width: 128px;
     border-radius: 25px;
     margin: 20px; 
 `;
