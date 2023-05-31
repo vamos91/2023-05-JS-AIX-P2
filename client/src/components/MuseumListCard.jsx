@@ -38,12 +38,14 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
             alignItems: 'flex-start',
             flexDirection:'row-reverse',
             width: '30rem',
+            borderBottom: '1px solid lightGrey',
+            paddingBottom: '5px',
         }}>
         <Image
             alt="Sample"
             src="https://picsum.photos/300/200"
         />
-        <CardBody>
+        <CardBody style={{width:'100%'}}>
             <CardTitle tag="h3">
                 {nomMusee}
             </CardTitle>
@@ -62,7 +64,7 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
                 </Box>
                 <Box>
                     <BsGlobe style={{marginRight:'5px'}}/>
-                    {site}
+                    <a href={site} target="_blank" style={{color:'black' }}>{site.split('/')[0]}</a> 
                 </Box>
             </Info>
         </CardBody>
