@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import style from "styled-components";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MapBox = () => {
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
@@ -23,19 +24,23 @@ const MapBox = () => {
       scrollZoom: true,
       minZoom: 5,
       maxZoom: 19,
+      attributionControl: false
     });
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
+    map.current.on("load", () => {
+      // For hide default markers of layer "poi-label" (transports excluded)
+      map.current.setLayoutProperty("poi-label", "visibility", "none");
+      // Add zoom and rotation controls to the map.
+      map.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
+    });
   }, []);
 
-  return(
-//   <div>
-//     <div>{lng} - {lat}</div>
+  return (
     <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>
-//   </div>
   );
 };
 export default MapBox;
