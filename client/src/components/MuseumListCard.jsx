@@ -18,8 +18,6 @@ const Adresse = styled.ul`
     list-style-type: none;
     padding: 0;
     margin: 0;
-    /* flex: 1;
-    width: 100%; */
 `;
 const Box = styled.div`
     display: flex;
@@ -40,11 +38,10 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
             alignItems: 'flex-start',
             flexDirection:'row-reverse',
             width: '30rem',
-           
         }}>
         <Image
-        alt="Sample"
-        src="https://picsum.photos/300/200"
+            alt="Sample"
+            src="https://picsum.photos/300/200"
         />
         <CardBody>
             <CardTitle tag="h3">
@@ -60,8 +57,14 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
                             <li>{ville}</li>
                         </Adresse>
                     </AdresseBox>
-                    <Box><RiSmartphoneFill style={{marginRight:'3px'}}/>  {numeroTelphone}</Box>
-                    <Box><BsGlobe style={{marginRight:'5px'}}/>  {site}</Box>
+                    <Box>
+                        <RiSmartphoneFill style={{marginRight:'3px'}}/>  
+                        {numeroTelphone}
+                    </Box>
+                    <Box>
+                        <BsGlobe style={{marginRight:'5px'}}/>
+                        {site}
+                    </Box>
                 </Info>
             </CardText>
         </CardBody>
