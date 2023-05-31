@@ -1,13 +1,12 @@
-import React from 'react'
-import MapBox from './components/MapBox'
+import React, { useEffect, useState } from "react";
+import MapBox from "./components/MapBox";
 
 function App() {
-
- return (
+  return (
     <div>
       <MapBox />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

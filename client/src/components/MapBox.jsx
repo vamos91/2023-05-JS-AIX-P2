@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import style from "styled-components";
-import 'mapbox-gl/dist/mapbox-gl.css';
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const MapBox = () => {
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
-  const mapContainer = useRef(null);
-  const map = useRef(null);
   const marseilleLng = 5.36978;
   const marseilleLat = 43.296482;
+  const mapContainer = useRef(null);
+  const map = useRef(null);
   const [lng, setLng] = useState(marseilleLng);
   const [lat, setLat] = useState(marseilleLat);
   const [zoom, setZoom] = useState(12);
@@ -24,7 +24,7 @@ const MapBox = () => {
       scrollZoom: true,
       minZoom: 5,
       maxZoom: 19,
-      attributionControl: false
+      attributionControl: false,
     });
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
@@ -37,7 +37,19 @@ const MapBox = () => {
       // Add zoom and rotation controls to the map.
       map.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
     });
+    // Move map to users location if permission
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        map.current.flyTo({
+          center: [position.coords.longitude, position.coords.latitude],
+          essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        });
+        setLng(position.coords.longitude);
+        setLat(position.coords.latitude);
+      });
+    }
   }, []);
+  console.log(navigator);
 
   return (
     <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>
