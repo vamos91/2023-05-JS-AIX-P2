@@ -6,7 +6,7 @@ import {RiSmartphoneFill} from 'react-icons/ri'
 import {BsGlobe} from 'react-icons/bs'
 
 const Image = styled.img`
-    max-width: 10vw;
+    max-width: 20vw;
     border-radius: 25px;
     margin: 20px; 
 `;
@@ -37,10 +37,10 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
         style={{
             marginLeft:'10px',
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             flexDirection:'row-reverse',
             width: '30rem',
-            backgroundColor:'lightgrey'
+           
         }}>
         <Image
         alt="Sample"
