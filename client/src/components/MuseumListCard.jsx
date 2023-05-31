@@ -10,14 +10,27 @@ const Image = styled.img`
     border-radius: 25px;
     margin: 20px; 
 `;
+const AdresseBox = styled.div`
+    display: flex;
+    padding-bottom: 10px;
+`;
 const Adresse = styled.ul`
     list-style-type: none;
     padding: 0;
+    margin: 0;
+    /* flex: 1;
+    width: 100%; */
+`;
+const Box = styled.div`
+    display: flex;
+    padding-bottom:'10px';
+    align-items: center;
 `;
 const Info = styled.div`
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column; 
 `;
+
 function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, site}) {
   return (
     <Card
@@ -26,34 +39,31 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
             display: 'flex',
             alignItems: 'center',
             flexDirection:'row-reverse',
-            width: '30rem'
+            width: '30rem',
+            backgroundColor:'lightgrey'
         }}>
         <Image
         alt="Sample"
         src="https://picsum.photos/300/200"
         />
         <CardBody>
-        <CardTitle tag="h3">
-            {nomMusee}
-        </CardTitle>
-        <CardText>
-            <Info>
-            <Adresse>
-            <li><SiGooglemaps style={{margin:'0 3px 0 0'}}/> {addresse}</li>
-            <li style={{
-                padding: '0 0 0 20px'
-            }}>{codePostal}</li>
-            <li style={{
-                padding: '0 0 0 20px'
-            }}>{ville}</li>
-        </Adresse> 
-          <p style={{margin:'0'}}><RiSmartphoneFill/> {numeroTelphone}</p>  
-        <br/>
-            <p style={{margin:'0'}}><BsGlobe/> {site}</p>
-            </Info>
-       
-        </CardText>
-        
+            <CardTitle tag="h3">
+                {nomMusee}
+            </CardTitle>
+            <CardText>
+                <Info>
+                    <AdresseBox> 
+                        <SiGooglemaps style={{marginRight:'3px'}} />  
+                        <Adresse>
+                            <li>{addresse}</li>
+                            <li>{codePostal}</li>
+                            <li>{ville}</li>
+                        </Adresse>
+                    </AdresseBox>
+                    <Box><RiSmartphoneFill style={{marginRight:'3px'}}/>  {numeroTelphone}</Box>
+                    <Box><BsGlobe style={{marginRight:'5px'}}/>  {site}</Box>
+                </Info>
+            </CardText>
         </CardBody>
   </Card>
   )
