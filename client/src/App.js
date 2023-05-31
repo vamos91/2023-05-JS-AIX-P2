@@ -1,8 +1,12 @@
 import React from 'react'
+import MapBox from './components/MapBox'
 
 function App() {
-  return (
-    <div>App</div>
+
+ return (
+    <div>
+      <MapBox />
+    </div>
   )
 }
 
