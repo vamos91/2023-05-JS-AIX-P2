@@ -56,9 +56,10 @@ const MapBox = ({ museums }) => {
     map.current.on("load", () => {
       map.current.loadImage(
         "https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png",
-        // "./locMusXS.svg",
+        // "./locMusXS1.png",
         function (error, image) {
           if (error) throw error;
+          // if (!map.current.hasImage('museum-pin')) map.current.addImage('museum-pin', image, { sdf: true });
           map.current.addImage("museum-pin", image);
 
           // Add a GeoJSON source with multiple points
@@ -92,6 +93,52 @@ const MapBox = ({ museums }) => {
           });
         } //
       ); //
+
+      // Create a popup, but don't add it to the map yet.
+      const popup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: true,
+        className: "map-popup",
+        maxWidth: "200px",
+      });
+
+      map.current.on("mouseenter", "places", async (e) => {
+        // console.log(e.features[0].properties);
+        // console.log("onmouseenter-before");
+        // console.log(e.features[0].properties.id);
+        // console.log(activePopup);
+
+        // Change the cursor style as a UI indicator.
+        map.current.getCanvas().style.cursor = "pointer";
+
+        // Copy coordinates array.
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const description = e.features[0].properties.description;
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        popup.setLngLat(coordinates).setHTML(description).addTo(map.current)
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        // await resolveAfter2Seconds(coordinates, description, map.current);
+        // console.log(popup.getElement());
+      });
+
+      // function resolveAfter2Seconds(coordinates, description, map) {
+      //   return new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       resolve(
+      //         popup.setLngLat(coordinates).setHTML(description).addTo(map.current)
+      //       );
+      //     }, 2000);
+      //   });
+      // }
 
       // Add zoom and rotation controls to the map.
       map.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
