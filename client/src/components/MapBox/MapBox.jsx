@@ -49,7 +49,7 @@ const MapBox = () => {
       });
     }
   }, []);
-  console.log(navigator);
+  // console.log(navigator);
 
   return (
     <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>

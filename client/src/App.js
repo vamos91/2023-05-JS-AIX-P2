@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MapBox from "./components/MapBox";
+import MapBox from "./components/MapBox/MapBox";
 
 function App() {
   return (
