@@ -3,7 +3,8 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 import style from "styled-components";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const MapBox = () => {
+const MapBox = ({museums}) => {
+  // console.log(museums);
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
   const marseilleLng = 5.36978;
   const marseilleLat = 43.296482;
@@ -49,7 +50,7 @@ const MapBox = () => {
       });
     }
   }, []);
-  console.log(navigator);
+  // console.log(navigator);
 
   return (
     <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>
