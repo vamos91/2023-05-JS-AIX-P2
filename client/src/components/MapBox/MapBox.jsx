@@ -29,23 +29,70 @@ const MapBox = ({ museums }) => {
       maxZoom: 19,
       attributionControl: false,
     });
-
+    // create map data object
+    const mapData = museums.map((record) => {
+      return {
+        type: "Feature",
+        properties: {
+          description: `<strong>${record.fields.nomoff}</strong><p>adresse</p>`,
+          id: record.fields.ref,
+          icon: "museum-pin",
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [
+            record.fields.geolocalisation_latlong[1],
+            record.fields.geolocalisation_latlong[0],
+          ], //[-77.038659, 38.931567],
+        },
+      };
+    });
+    console.log(mapData);
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
     map.current.on("load", () => {
-      // Add a GeoJSON source with multiple points
-      map.current.addSource("places", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: mapData,
-        },
-      });
-      // For hide default markers of layer "poi-label" (transports excluded)
-      map.current.setLayoutProperty("poi-label", "visibility", "none");
+      map.current.loadImage(
+        "https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png",
+        // "./locMusXS.svg",
+        function (error, image) {
+          if (error) throw error;
+          map.current.addImage("museum-pin", image);
+
+          // Add a GeoJSON source with multiple points
+          map.current.addSource("places", {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: mapData,
+            },
+          });
+
+          // For hide default markers of layer "poi-label" (transports excluded)
+          map.current.setLayoutProperty("poi-label", "visibility", "none");
+
+          // Add a layer showing the places.
+          map.current.addLayer({
+            id: "places",
+            type: "symbol",
+            source: "places",
+            //   paint: {
+            //     "circle-color": "#12B5CB",
+            //     "circle-radius": 8,
+            //     "circle-stroke-width": 1,
+            //     "circle-stroke-color": "#12B5CB",
+            //   },
+            layout: {
+              "icon-image": ["get", "icon"],
+              // "museum-marker-label":["get", "icon"],
+              "icon-allow-overlap": true,
+            },
+          });
+        } //
+      ); //
+
       // Add zoom and rotation controls to the map.
       map.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
     });
