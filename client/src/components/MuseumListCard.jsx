@@ -40,6 +40,7 @@ function MuseumListCard({nomMusee, addresse, codePostal, ville, numeroTelphone, 
             width: '30rem',
             borderBottom: '1px solid lightGrey',
             paddingBottom: '5px',
+            zIndex: '1000'
         }}>
         <Image
             alt="Sample"

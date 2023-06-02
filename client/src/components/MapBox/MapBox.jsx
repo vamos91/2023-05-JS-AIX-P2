@@ -3,7 +3,9 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 import style from "styled-components";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const MapBox = () => {
+const MapBox = ({ museums }) => {
+  // console.log(museums);
+
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
   const marseilleLng = 5.36978;
   const marseilleLat = 43.296482;
@@ -12,6 +14,7 @@ const MapBox = () => {
   const [lng, setLng] = useState(marseilleLng);
   const [lat, setLat] = useState(marseilleLat);
   const [zoom, setZoom] = useState(12);
+
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
@@ -26,12 +29,21 @@ const MapBox = () => {
       maxZoom: 19,
       attributionControl: false,
     });
+
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
     map.current.on("load", () => {
+      // Add a GeoJSON source with multiple points
+      map.current.addSource("places", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: mapData,
+        },
+      });
       // For hide default markers of layer "poi-label" (transports excluded)
       map.current.setLayoutProperty("poi-label", "visibility", "none");
       // Add zoom and rotation controls to the map.
@@ -51,9 +63,7 @@ const MapBox = () => {
   }, []);
   // console.log(navigator);
 
-  return (
-    <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>
-  );
+  return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;
 };
 export default MapBox;
 const MapWrapper = style.div`

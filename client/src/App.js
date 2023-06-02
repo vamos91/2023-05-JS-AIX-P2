@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import MapBox from "./components/MapBox/MapBox";
-import SideBarMuseums from './components/SideBarMuseums'
-import SearchBar from './components/SearchBar'
+import SideBarMuseums from "./components/SideBarMuseums";
+import SearchBar from "./components/SearchBar";
 
 function App() {
-  const [musees, setMusees] = useState()
+  const [musees, setMusees] = useState();
+  // console.log(musees);
   return (
     <div>
-      {/* <MapBox /> */}
-      <SearchBar musees={musees} setMusees={setMusees}/>
-      {musees && <SideBarMuseums musees = {musees} />}
+      <SearchBar musees={musees} setMusees={setMusees} />
+      {musees && <SideBarMuseums musees={musees} />}
+      {musees && <MapBox museums={musees} />}
     </div>
   );
 }
