@@ -63,12 +63,13 @@ const MapBox = ({ museums }) => {
     });
     map.current.on("load", () => {
       map.current.loadImage(
-        "https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png",
-        // "./locMusXS1.png",
+        // "https://i.postimg.cc/QC9j8Xpk/loc-Gard-XS.png", // GARDENS
+        // "./locMusXS.png",
+        "https://i.postimg.cc/QC2hVRmL/locMusXS.png",
         function (error, image) {
           if (error) throw error;
-          // if (!map.current.hasImage('museum-pin')) map.current.addImage('museum-pin', image, { sdf: true });
-          map.current.addImage("museum-pin", image);
+          if (!map.current.hasImage('museum-pin')) map.current.addImage('museum-pin', image);
+          // map.current.addImage("museum-pin", image);
 
           // Add a GeoJSON source with multiple points
           map.current.addSource("places", {
