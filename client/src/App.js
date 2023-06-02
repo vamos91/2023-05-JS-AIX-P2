@@ -5,7 +5,7 @@ import SearchBar from "./components/SearchBar";
 
 function App() {
   const [musees, setMusees] = useState();
-  // console.log(musees);
+  console.log(musees);
   return (
     <div>
       <SearchBar musees={musees} setMusees={setMusees} />

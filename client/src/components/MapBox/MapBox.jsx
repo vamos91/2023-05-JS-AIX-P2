@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import style from "styled-components";
+import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
+import {SiGooglemaps} from 'react-icons/si'
 
 const MapBox = ({ museums }) => {
   // console.log(museums);
@@ -34,7 +36,13 @@ const MapBox = ({ museums }) => {
       return {
         type: "Feature",
         properties: {
-          description: `<strong>${record.fields.nomoff}</strong><p>adresse</p>`,
+          description: `<img src='https://picsum.photos/300/200'></img>
+                        <div class="popup-description">
+                          <h3> ${(record.fields.nomoff).charAt(0).toUpperCase() + record.fields.nomoff.slice(1)}</h3>
+                          <p>${record.fields.lieu_m??''}</p>
+                          <p>${record.fields.adrl1_m??''}</p>
+                          <p>${record.fields.cp_m??''} ${record.fields.ville_m??''}</p>
+                        </div>`,
           id: record.fields.ref,
           icon: "museum-pin",
         },
@@ -79,13 +87,7 @@ const MapBox = ({ museums }) => {
             id: "places",
             type: "symbol",
             source: "places",
-            //   paint: {
-            //     "circle-color": "#12B5CB",
-            //     "circle-radius": 8,
-            //     "circle-stroke-width": 1,
-            //     "circle-stroke-color": "#12B5CB",
-            //   },
-            layout: {
+                  layout: {
               "icon-image": ["get", "icon"],
               // "museum-marker-label":["get", "icon"],
               "icon-allow-overlap": true,
@@ -162,4 +164,7 @@ const MapBox = ({ museums }) => {
 export default MapBox;
 const MapWrapper = style.div`
  height: 100vh;
+ `;
+ const PopupWrapper = style.div`
+ background-color:red;
  `;
