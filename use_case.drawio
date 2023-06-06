@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-06-06T13:52:48.924Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="wY_PRRWM5bZsl10tbUyr" version="21.3.7" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-06T13:58:59.238Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="Jb91UOHJndOKDTS7WHHS" version="21.3.7" type="github">
   <diagram name="Page-1" id="PXeBXMTZTi52IVfcGNrW">
     <mxGraphModel dx="1050" dy="1789" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -151,6 +151,9 @@
         <mxCell id="Ao3JNqcXDAkQ6oakhJqd-53" value="Créer des listes de favoris nominative" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="250" y="600" width="120" height="80" as="geometry" />
         </mxCell>
+        <mxCell id="Ao3JNqcXDAkQ6oakhJqd-94" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=15;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Ao3JNqcXDAkQ6oakhJqd-55" target="Ao3JNqcXDAkQ6oakhJqd-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="Ao3JNqcXDAkQ6oakhJqd-55" value="Ajouter / supprimer des musées" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="450" y="600" width="120" height="80" as="geometry" />
         </mxCell>
@@ -236,6 +239,9 @@
         </mxCell>
         <mxCell id="Ao3JNqcXDAkQ6oakhJqd-86" value="Ajouter / supprimer" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="480" y="1230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ao3JNqcXDAkQ6oakhJqd-96" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=15;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Ao3JNqcXDAkQ6oakhJqd-89" target="Ao3JNqcXDAkQ6oakhJqd-57">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Ao3JNqcXDAkQ6oakhJqd-89" value="MYSQL" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
           <mxGeometry x="1040" y="1040" width="60" height="80" as="geometry" />
