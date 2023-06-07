@@ -41,7 +41,7 @@
   padding: 10px;
 }
 .map-popup .popup-description p,
-h3 {
+.map-popup .popup-description h3 {
   padding: 0;
   margin: 0;
 }
