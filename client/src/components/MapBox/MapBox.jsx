@@ -3,7 +3,8 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 import style from "styled-components";
 import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import {SiGooglemaps} from 'react-icons/si'
+import { SiGooglemaps } from "react-icons/si";
+import PopUp from "./PopUp";
 
 const MapBox = ({ museums }) => {
   // console.log(museums);
@@ -16,6 +17,7 @@ const MapBox = ({ museums }) => {
   const [lng, setLng] = useState(marseilleLng);
   const [lat, setLat] = useState(marseilleLat);
   const [zoom, setZoom] = useState(12);
+  const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }));
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -38,10 +40,15 @@ const MapBox = ({ museums }) => {
         properties: {
           description: `<img src='https://picsum.photos/300/200'></img>
                         <div class="popup-description">
-                          <h3> ${(record.fields.nomoff).charAt(0).toUpperCase() + record.fields.nomoff.slice(1)}</h3>
-                          <p>${record.fields.lieu_m??''}</p>
-                          <p>${record.fields.adrl1_m??''}</p>
-                          <p>${record.fields.cp_m??''} ${record.fields.ville_m??''}</p>
+                          <h3> ${
+                            record.fields.nomoff.charAt(0).toUpperCase() +
+                            record.fields.nomoff.slice(1)
+                          }</h3>
+                          <p>${record.fields.lieu_m ?? ""}</p>
+                          <p>${record.fields.adrl1_m ?? ""}</p>
+                          <p>${record.fields.cp_m ?? ""} ${
+            record.fields.ville_m ?? ""
+          }</p>
                         </div>`,
           id: record.fields.ref,
           icon: "museum-pin",
@@ -56,6 +63,7 @@ const MapBox = ({ museums }) => {
       };
     });
     console.log(mapData);
+   
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
@@ -68,7 +76,8 @@ const MapBox = ({ museums }) => {
         "https://i.postimg.cc/QC2hVRmL/locMusXS.png",
         function (error, image) {
           if (error) throw error;
-          if (!map.current.hasImage('museum-pin')) map.current.addImage('museum-pin', image);
+          if (!map.current.hasImage("museum-pin"))
+            map.current.addImage("museum-pin", image);
           // map.current.addImage("museum-pin", image);
 
           // Add a GeoJSON source with multiple points
@@ -88,7 +97,7 @@ const MapBox = ({ museums }) => {
             id: "places",
             type: "symbol",
             source: "places",
-                  layout: {
+            layout: {
               "icon-image": ["get", "icon"],
               // "museum-marker-label":["get", "icon"],
               "icon-allow-overlap": true,
@@ -97,7 +106,7 @@ const MapBox = ({ museums }) => {
         } //
       ); //
 
-      // Create a popup, but don't add it to the map yet.
+      // // Create a popup, but don't add it to the map yet.
       const popup = new mapboxgl.Popup({
         closeButton: true,
         closeOnClick: true,
@@ -105,7 +114,10 @@ const MapBox = ({ museums }) => {
         maxWidth: "200px",
       });
 
-      map.current.on("mouseenter", "places", async (e) => {
+      // const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }))
+
+      // map.current.on("mouseenter", "places", async (e) => {
+      map.current.on("click", "places", async (e) => {
         // console.log(e.features[0].properties);
         // console.log("onmouseenter-before");
         // console.log(e.features[0].properties.id);
@@ -125,7 +137,7 @@ const MapBox = ({ museums }) => {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
 
-        popup.setLngLat(coordinates).setHTML(description).addTo(map.current)
+        popup.setLngLat(coordinates).setHTML(description).addTo(map.current);
 
         // Populate the popup and set its coordinates
         // based on the feature found.
@@ -166,6 +178,6 @@ export default MapBox;
 const MapWrapper = style.div`
  height: 100vh;
  `;
- const PopupWrapper = style.div`
+const PopupWrapper = style.div`
  background-color:red;
  `;
