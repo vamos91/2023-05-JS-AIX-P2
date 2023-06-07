@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import RangeBar from "./RangeBar";
 
 const SearchBar = ({ musees, setMusees }) => {
   useEffect(() => {
@@ -15,7 +16,12 @@ const SearchBar = ({ musees, setMusees }) => {
     fetchMusee();
   }, []);
 
-  return <SearchBarWrapper>SEARCHBAR</SearchBarWrapper>;
+  return (
+    <SearchBarWrapper>
+      SEARCHBAR
+      <RangeBar />
+    </SearchBarWrapper>
+  );
 };
 
 export default SearchBar;
