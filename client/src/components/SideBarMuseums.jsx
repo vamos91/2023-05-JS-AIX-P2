@@ -6,6 +6,11 @@ const SideBar = styled.div`
     position: fixed;
     overflow-y: scroll;
     height: 100vh;
+    z-index: 1000;
+    position: absolute;
+    top: 0px;
+    left:0px;
+    background-color:white;
 `;
 
 const SideBarMuseums = ({musees}) => {
