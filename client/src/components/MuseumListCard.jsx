@@ -77,7 +77,8 @@ function MuseumListCard({
             {numeroTelphone}
           </Box>
           <Box>
-            <BsGlobe style={{ marginRight: "5px", color: '#90a955' }} />
+           <BsGlobe style={{ marginRight: "5px", color: '#90a955' }} />
+            {site && (
             <a
               href={"https://" + site}
               target="_blank"
@@ -85,6 +86,7 @@ function MuseumListCard({
             >
               {site.split("/")[0]}
             </a>
+             )}
           </Box>
         </Info>
       </CardBody>

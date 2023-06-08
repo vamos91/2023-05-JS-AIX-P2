@@ -4,6 +4,7 @@ import SideBarMuseums from "./components/SideBarMuseums";
 import SearchBar from "./components/SearchBar";
 
 function App() {
+  const [loading, setLoading] = useState(true);
   const [musees, setMusees] = useState();
   const [perimeter, setPerimeter] = useState(10000);
   const [center, setCenter] = useState({lng: 5.36978,lat: 43.296482});
