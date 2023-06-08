@@ -1,4 +1,4 @@
-.map-popup .mapboxgl-popup-content {
+div.mapboxgl-popup-content {
   background-color: white;
   width: 200px;
   display: flex;
@@ -8,13 +8,7 @@
   margin: 0;
   border-radius: 20px;
 }
-
-.map-popup img {
-  width: 100%;
-  border-radius: 20px 20px 0px 0px;
-}
-
-.map-popup .mapboxgl-popup-close-button{
+button.mapboxgl-popup-close-button{
   width: 20px;
   height: 20px;
   border: none;
@@ -34,14 +28,6 @@
   background-color: rgba(255, 255, 255, 0.616);
 }
 .map-popup .mapboxgl-popup-close-button > * {
-  padding: 0;
-  margin: 0;
-}
-.map-popup .popup-description {
-  padding: 10px;
-}
-.map-popup .popup-description p,
-h3 {
   padding: 0;
   margin: 0;
 }
