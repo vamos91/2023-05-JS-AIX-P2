@@ -77,13 +77,15 @@ function MuseumListCard({
           </Box>
           <Box>
             <BsGlobe style={{ marginRight: "5px" }} />
-            <a
-              href={"https://" + site}
-              target="_blank"
-              style={{ color: "black" }}
-            >
-              {site.split("/")[0]}
-            </a>
+            {site && (
+              <a
+                href={"https://" + site}
+                target="_blank"
+                style={{ color: "black" }}
+              >
+                {site.split("/")[0]}
+              </a>
+            )}
           </Box>
         </Info>
       </CardBody>
