@@ -6,7 +6,7 @@ import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import PopUp from "./PopUp";
 
-const MapBox = ({ museums, perimeter }) => {
+const MapBox = ({ museums, perimeter, setCenter }) => {
   // console.log(museums);
 
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
@@ -186,8 +186,8 @@ const MapBox = ({ museums, perimeter }) => {
     const metersPerPixel = perimeter / maxPixels;
     const zoom = (((Math.log(40075016.686 * Math.cos(7.25*Math.PI/180)) - Math.log(metersPerPixel)) / Math.LN2) - 8);
 
-    console.log(zoom);
     map.current.setZoom(zoom);
+    setCenter(map.current.getCenter()); 
   }, [perimeter]);
 
   return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;

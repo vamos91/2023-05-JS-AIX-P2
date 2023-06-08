@@ -10,7 +10,7 @@ const fetchMusee = async (apiQuery) => {
   return fetchjson.records;
 };
 
-const SearchBar = ({ musees, setMusees, perimeter, setPerimeter }) => {
+const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
 
   useEffect(() => {
     (async() => {
@@ -21,7 +21,7 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter }) => {
 
   useEffect(() => {
     (async() => {
-      const fetchjson = await fetchMusee('&geofilter.distance=43.296679,5.362256,'+perimeter);
+      const fetchjson = await fetchMusee(`&geofilter.distance=${center.lat},${center.lng},${perimeter}`);
       setMusees(fetchjson);
     })();
   }, [perimeter]);
