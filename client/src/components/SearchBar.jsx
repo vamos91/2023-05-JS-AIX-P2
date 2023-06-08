@@ -28,7 +28,6 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
 
   return (
     <SearchBarWrapper>
-      SEARCHBAR
       <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
     </SearchBarWrapper>
   );
@@ -40,5 +39,5 @@ const SearchBarWrapper = styled.div`
   position: absolute;
   top: 10px;
   left: 60%;
-  background-color: white;
+  /* background-color: white; */
 `;

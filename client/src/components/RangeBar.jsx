@@ -4,7 +4,15 @@ import { Form, FormGroup, Label, Input } from "reactstrap";
 const RangeBar = ({ perimeter, setPerimeter }) => {
   return (
     <Form>
-      <FormGroup>
+      <FormGroup
+        style={{
+          borderRadius: '20px',
+          backgroundColor: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 5px'
+        }}
+      >
         <Input
           id="exampleRange"
           name="range"
