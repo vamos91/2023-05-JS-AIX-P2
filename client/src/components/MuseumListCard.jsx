@@ -81,7 +81,7 @@ function MuseumListCard({
             <a
               href={"https://" + site}
               target="_blank"
-              style={{ color: "black" }}
+              style={{ color: "#90a955" }}
             >
               {site.split("/")[0]}
             </a>
