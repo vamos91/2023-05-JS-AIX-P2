@@ -5,7 +5,7 @@ import SearchBar from "./components/SearchBar";
 
 function App() {
   const [musees, setMusees] = useState();
-  const [perimeter, setPerimeter] = useState(10);
+  const [perimeter, setPerimeter] = useState(10000);
 
   console.log(musees);
   return (

@@ -9,12 +9,12 @@ const RangeBar = ({ perimeter, setPerimeter }) => {
           id="exampleRange"
           name="range"
           type="range"
-          value={perimeter}
+          value={perimeter/1000}
           min={1}
           max={20}
-          onChange={(e) => setPerimeter(e.target.value)}
+          onChange={(e) => setPerimeter(e.target.value*1000)}
         />
-        <Label for="exampleRange">{perimeter} km</Label>
+        <Label for="exampleRange">{perimeter/1000} km</Label>
       </FormGroup>
     </Form>
   );

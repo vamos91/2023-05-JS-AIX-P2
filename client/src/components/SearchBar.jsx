@@ -16,6 +16,19 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter }) => {
     fetchMusee();
   }, []);
 
+  useEffect(() => {
+    const fetchMusee = async () => {
+      const returnFetch = await fetch(
+        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=&geofilter.distance=43.296679,5.362256,"+perimeter
+      );
+      const fetchjson = await returnFetch.json();
+      setMusees(fetchjson.records);
+      // console.log(fetchjson.records)
+    };
+
+    fetchMusee();
+  }, [perimeter]);
+
   return (
     <SearchBarWrapper>
       SEARCHBAR

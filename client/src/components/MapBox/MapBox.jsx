@@ -183,7 +183,7 @@ const MapBox = ({ museums, perimeter }) => {
     // Calcul le zoom par rapport au périmètre et au centre
     const mapSize = map.current.getCanvas();
     const maxPixels = mapSize.width > mapSize.height ? mapSize.height/2 : mapSize.width/2;
-    const metersPerPixel = perimeter*1000 / maxPixels;
+    const metersPerPixel = perimeter / maxPixels;
     const zoom = (((Math.log(40075016.686 * Math.cos(7.25*Math.PI/180)) - Math.log(metersPerPixel)) / Math.LN2) - 8);
 
     console.log(zoom);
