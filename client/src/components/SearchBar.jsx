@@ -2,31 +2,28 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import RangeBar from "./RangeBar";
 
-const SearchBar = ({ musees, setMusees, perimeter, setPerimeter }) => {
-  useEffect(() => {
-    const fetchMusee = async () => {
-      const returnFetch = await fetch(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=ville_m=Marseille"
-      );
-      const fetchjson = await returnFetch.json();
-      setMusees(fetchjson.records);
-      // console.log(fetchjson.records)
-    };
+const fetchMusee = async (apiQuery) => {
+  const returnFetch = await fetch(
+    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q="+apiQuery
+  );
+  const fetchjson = await returnFetch.json();
+  return fetchjson.records;
+};
 
-    fetchMusee();
+const SearchBar = ({ musees, setMusees, perimeter, setPerimeter }) => {
+
+  useEffect(() => {
+    (async() => {
+      const fetchjson = await fetchMusee('ville_m=Marseille');
+      setMusees(fetchjson);
+    })();
   }, []);
 
   useEffect(() => {
-    const fetchMusee = async () => {
-      const returnFetch = await fetch(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=&geofilter.distance=43.296679,5.362256,"+perimeter
-      );
-      const fetchjson = await returnFetch.json();
-      setMusees(fetchjson.records);
-      // console.log(fetchjson.records)
-    };
-
-    fetchMusee();
+    (async() => {
+      const fetchjson = await fetchMusee('&geofilter.distance=43.296679,5.362256,'+perimeter);
+      setMusees(fetchjson);
+    })();
   }, [perimeter]);
 
   return (
