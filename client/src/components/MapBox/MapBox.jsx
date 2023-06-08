@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import style from "styled-components";
 import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { SiGooglemaps } from "react-icons/si";
 import PopUp from "./PopUp";
 
 const MapBox = ({ museums }) => {
-  // console.log(museums);
-
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
   const marseilleLng = 5.36978;
   const marseilleLat = 43.296482;
@@ -38,18 +36,14 @@ const MapBox = ({ museums }) => {
       return {
         type: "Feature",
         properties: {
-          description: `<img src='https://picsum.photos/300/200'></img>
-                        <div class="popup-description">
-                          <h3> ${
-                            record.fields.nomoff.charAt(0).toUpperCase() +
-                            record.fields.nomoff.slice(1)
-                          }</h3>
-                          <p>${record.fields.lieu_m ?? ""}</p>
-                          <p>${record.fields.adrl1_m ?? ""}</p>
-                          <p>${record.fields.cp_m ?? ""} ${
-            record.fields.ville_m ?? ""
-          }</p>
-                        </div>`,
+          image: "https://picsum.photos/300/200",
+          name:
+            record.fields.nomoff.charAt(0).toUpperCase() +
+            record.fields.nomoff.slice(1),
+          place: record.fields.lieu_m ?? "",
+          address: record.fields.adrl1_m ?? "",
+          cp: record.fields.cp_m ?? "",
+          city: record.fields.ville_m ?? "",
           id: record.fields.ref,
           icon: "museum-pin",
         },
@@ -63,7 +57,7 @@ const MapBox = ({ museums }) => {
       };
     });
     console.log(mapData);
-   
+
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
@@ -128,7 +122,7 @@ const MapBox = ({ museums }) => {
 
         // Copy coordinates array.
         const coordinates = e.features[0].geometry.coordinates.slice();
-        const description = e.features[0].properties.description;
+        // const description = e.features[0].properties.description;
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
@@ -136,8 +130,19 @@ const MapBox = ({ museums }) => {
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-
-        popup.setLngLat(coordinates).setHTML(description).addTo(map.current);
+        // add personalised PopUp
+        if (e.features.length > 0) {
+          const feature = e.features[0];
+          // create popup node
+          const popupNode = document.createElement("div"); // refaire un composant
+          createRoot(popupNode).render(<PopUp records={feature.properties} />);
+          popUpRef.current
+            .setLngLat(coordinates)
+            .setDOMContent(popupNode)
+            .addTo(map.current);
+        }
+        // add mapBox PopUp
+        // popup.setLngLat(coordinates).setHTML(description).addTo(map.current);
 
         // Populate the popup and set its coordinates
         // based on the feature found.
@@ -178,6 +183,4 @@ export default MapBox;
 const MapWrapper = style.div`
  height: 100vh;
  `;
-const PopupWrapper = style.div`
- background-color:red;
- `;
+
