@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 
-const RangeBar = () => {
-  const [perimeter, setPerimeter] = useState(10);
-
+const RangeBar = ({ perimeter, setPerimeter }) => {
   return (
     <Form>
       <FormGroup>

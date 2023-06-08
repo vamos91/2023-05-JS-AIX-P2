@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import RangeBar from "./RangeBar";
 
-const SearchBar = ({ musees, setMusees }) => {
+const SearchBar = ({ musees, setMusees, perimeter, setPerimeter }) => {
   useEffect(() => {
     const fetchMusee = async () => {
       const returnFetch = await fetch(
@@ -19,7 +19,7 @@ const SearchBar = ({ musees, setMusees }) => {
   return (
     <SearchBarWrapper>
       SEARCHBAR
-      <RangeBar />
+      <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
     </SearchBarWrapper>
   );
 };

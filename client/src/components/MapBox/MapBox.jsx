@@ -6,7 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { SiGooglemaps } from "react-icons/si";
 import PopUp from "./PopUp";
 
-const MapBox = ({ museums }) => {
+const MapBox = ({ museums, perimeter }) => {
   // console.log(museums);
 
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
@@ -63,7 +63,7 @@ const MapBox = ({ museums }) => {
       };
     });
     console.log(mapData);
-   
+
     map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
@@ -171,6 +171,17 @@ const MapBox = ({ museums }) => {
     }
   }, []);
   // console.log(navigator);
+
+  useEffect(() => {
+    // Calcul le zoom par rapport au périmètre et au centre
+    const mapSize = map.current.getCanvas();
+    const maxPixels = mapSize.width > mapSize.height ? mapSize.height/2 : mapSize.width/2;
+    const metersPerPixel = perimeter*1000 / maxPixels;
+    const zoom = (((Math.log(40075016.686 * Math.cos(7.25*Math.PI/180)) - Math.log(metersPerPixel)) / Math.LN2) - 8);
+
+    console.log(zoom);
+    map.current.setZoom(zoom);
+  }, [perimeter]);
 
   return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;
 };
