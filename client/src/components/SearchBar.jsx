@@ -1,26 +1,36 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import RangeBar from "./RangeBar";
 
-const SearchBar = ({ musees, setMusees, setLoading }) => {
+const fetchMusee = async (apiQuery) => {
+  const returnFetch = await fetch(
+    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q="+apiQuery
+  );
+  const fetchjson = await returnFetch.json();
+  return fetchjson.records;
+};
+
+const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
+
   useEffect(() => {
-    setLoading(true);
-    const fetchMusee = async () => {
-      const returnFetch = await fetch(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=ville_m=Marseille"
-        //  "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=&rows=100&facet=dompal&facet=region"
-      );
-      const fetchjson = await returnFetch.json();
-      setMusees(fetchjson.records);
-      // console.log(fetchjson.records)
-    };
-    fetchMusee();
-    // const timer = setTimeout(() => {
-    setLoading(false);
-    // }, 2000);
-    // return () => clearTimeout(timer);
+    (async() => {
+      const fetchjson = await fetchMusee('ville_m=Marseille');
+      setMusees(fetchjson);
+    })();
   }, []);
 
-  return <SearchBarWrapper>SEARCHBAR</SearchBarWrapper>;
+  useEffect(() => {
+    (async() => {
+      const fetchjson = await fetchMusee(`&geofilter.distance=${center.lat},${center.lng},${perimeter}`);
+      setMusees(fetchjson);
+    })();
+  }, [perimeter]);
+
+  return (
+    <SearchBarWrapper>
+      <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
+    </SearchBarWrapper>
+  );
 };
 
 export default SearchBar;
@@ -29,5 +39,5 @@ const SearchBarWrapper = styled.div`
   position: absolute;
   top: 10px;
   left: 60%;
-  background-color: white;
+  /* background-color: white; */
 `;
