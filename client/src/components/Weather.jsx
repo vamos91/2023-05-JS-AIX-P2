@@ -3,8 +3,14 @@ import styled from 'styled-components';
 
 const WeatherContainer = styled.div`
     background-color: white;
+    display: flex;
+    align-items: center;
     padding: 5px 10px;
     border-radius: 20px;
+`;
+
+const WeatherIcon = styled.img`
+    max-height: 30px;
 `;
 
 const fetchWeather = async(signal) => {
@@ -16,14 +22,15 @@ const fetchWeather = async(signal) => {
 }
 
 const Weather = () => {
-    const [weather, setWeather] = useState();
+    const [weather, setWeather] = useState({main: "", icon:""});
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
 
         (async() => {
             const fetchjson = await fetchWeather(signal);
-            setWeather(fetchjson.main);
+            console.log(fetchjson)
+            setWeather(fetchjson);
         })();
         
         return function cleanup() {
@@ -32,7 +39,8 @@ const Weather = () => {
     },[]);
     return (
         <WeatherContainer>
-            {weather}
+            <WeatherIcon src={`https://openweathermap.org/img/wn/${weather.icon}.png`}/>
+            {weather.main}
         </WeatherContainer>
     );
 };

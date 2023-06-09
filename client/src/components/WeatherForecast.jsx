@@ -9,10 +9,15 @@ const Container = styled.div`
 
 const BoxWeatherDay = styled.div`
     background-color: white;
-    text-align: center;
+    display: flex;
+    align-items: center;
     border-radius: 10px;
-    padding: 10px;
     margin: 0 5px;
+    padding-right: 5px;
+`;
+
+const WeatherIcon = styled.img`
+    max-height: 30px;
 `;
 
 const fetchWeather = async(signal) => {
@@ -48,6 +53,7 @@ const WeatherForecast = () => {
             {
                 weather5Days && weather5Days.map((day, i) => (
                     <BoxWeatherDay key={'day'+i}>
+                        <WeatherIcon src={`https://openweathermap.org/img/wn/${day.weather[0].icon}.png`}/>
                         {day.weather[0].main}
                     </BoxWeatherDay>
                 ))
