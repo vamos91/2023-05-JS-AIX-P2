@@ -13,6 +13,17 @@ const SideBar = styled.div`
   left: 0px;
   background-color: white;
   width: 32rem;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: lightgrey;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: grey;
+  }
+
 `;
 
 const SideBarMuseums = ({ musees, isLoading }) => {

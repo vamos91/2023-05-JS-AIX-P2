@@ -13,9 +13,9 @@ import { RiSmartphoneFill } from "react-icons/ri";
 import { BsGlobe } from "react-icons/bs";
 
 const Image = styled.img`
-  max-width: 128px;
+  max-height: 128px;
   border-radius: 25px;
-  margin: 20px;
+  margin-top: 20px;
 `;
 const AdresseBox = styled.div`
   display: flex;
