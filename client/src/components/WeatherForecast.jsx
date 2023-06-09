@@ -23,10 +23,10 @@ const WeatherIcon = styled.img`
     max-height: 30px;
 `;
 
-const fetchWeather = async(signal) => {
+const fetchWeather = async(signal, center) => {
     let weather5Days = [];
     const returnFetch = await fetch(
-        "https://api.openweathermap.org/data/2.5/forecast?lat=43.29&lon=5.36&appid="+process.env.REACT_APP_OPENWEATHERMAP_KEY, 
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${center.lat}&lon=${center.lng}&appid=`+process.env.REACT_APP_OPENWEATHERMAP_KEY, 
     {signal});
     const fetchjson = await returnFetch.json();
     for(let i=0; i<5; i++){
@@ -36,14 +36,14 @@ const fetchWeather = async(signal) => {
     return weather5Days;
 }
 
-const WeatherForecast = ({toggleWeather, setToggleWeather}) => {
+const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
     const [weather5Days, setWeather5Days] = useState();
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
 
         (async() => {
-            const fetchjson = await fetchWeather(signal);
+            const fetchjson = await fetchWeather(signal, center);
             console.log(fetchjson)
             setWeather5Days(fetchjson);
         })();
@@ -51,7 +51,7 @@ const WeatherForecast = ({toggleWeather, setToggleWeather}) => {
         return function cleanup() {
             controller.abort();
         }
-    },[]);
+    },[center]);
 
     const toogleWeatherBox = (index) => {
         const tmp = toggleWeather.days.map((day,i) => i == index ? {enable: !day.enable} : {enable: false});

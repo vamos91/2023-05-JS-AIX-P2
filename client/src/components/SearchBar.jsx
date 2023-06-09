@@ -43,10 +43,10 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
     <SearchBarWrapper>
       <FiltersWrapper>
         <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
-        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
+        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
       </FiltersWrapper>
       <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
-        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
+        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
       </div> 
     </SearchBarWrapper>
   );
