@@ -7,8 +7,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import PopUp from "./PopUp";
 
 const MapBox = ({ museums, perimeter, setCenter, center }) => {
-  console.log(museums);
-  console.log(center.lng);
+  // console.log(museums);
+  // console.log(center.lng);
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
   // const marseilleLng = 5.36978;
   // const marseilleLat = 43.296482;
@@ -18,7 +18,7 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
   const [zoom, setZoom] = useState(12);
   const [lngLat, setLngLat] = useState();
   const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }));
-  console.log(lngLat);
+  // console.log(lngLat);
   const mapData = museums.map((record) => {
     return {
       type: "Feature",
@@ -43,6 +43,11 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
       },
     };
   });
+  // console.log("RECU")
+  // console.log("mapData");
+  // console.log(mapData);
+  // console.log("museums");
+  // console.log(museums);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -60,10 +65,9 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
     });
 
     map.current.on("move", () => {
-      setLngLat(map.current.getCenter());
-      // setCenter(map.current.getCenter()); // TROP DE FETCHS !!! ENLEVE POUR DEV
+      setCenter(map.current.getCenter());
       setZoom(map.current.getZoom().toFixed(2));
-      });
+    });
 
     map.current.on("load", () => {
       map.current.loadImage(
@@ -74,7 +78,6 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
           if (error) throw error;
           if (!map.current.hasImage("museum-pin"))
             map.current.addImage("museum-pin", image);
-          // map.current.addImage("museum-pin", image);
 
           // Add a GeoJSON source with multiple points
           map.current.addSource("places", {
@@ -181,8 +184,12 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
     setMapInit(true);
   }, []);
   // console.log(navigator);
-
+  // console.log(mapInit);
   useEffect(() => {
+    console.log("perimeter changed to :" + perimeter);
+    console.log("mapdata useff2 if false");
+    console.log(mapData);
+    console.log(museums);
     if (mapInit) {
       // Calcul le zoom par rapport au périmètre et au centre
       const mapSize = map.current.getCanvas();
@@ -199,14 +206,19 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
       setCenter(map.current.getCenter());
 
       console.log(map.current.getSource("places"));
-      console.log("mapdata useff2");
+      console.log("mapdata useff2 if true");
+      console.log("mapData");
       console.log(mapData);
-      map.current.getSource("places").setData({
-        type: "FeatureCollection",
-        features: mapData,
-      });
+      console.log("museums");
+      console.log(museums);
+      if (map.current.getSource("places")) {
+        map.current.getSource("places").setData({
+          type: "FeatureCollection",
+          features: mapData,
+        });
+      }
     }
-  }, [perimeter]);
+  }, [museums]);
 
   return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;
 };

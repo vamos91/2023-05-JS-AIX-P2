@@ -9,6 +9,7 @@ function App() {
   const [perimeter, setPerimeter] = useState(10000);
   const [center, setCenter] = useState({ lng: 5.36978, lat: 43.296482 });
 
+  console.log("App.js");
   console.log(musees);
   return (
     <div>
