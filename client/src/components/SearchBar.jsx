@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import RangeBar from "./RangeBar";
 import Weather from "./Weather";
@@ -13,6 +13,7 @@ const fetchMusee = async (apiQuery) => {
 };
 
 const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
+  const [toggleWeather, setToggleWeather] = useState(false);
 
   useEffect(() => {
     (async() => {
@@ -32,9 +33,11 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
     <SearchBarWrapper>
       <FiltersWrapper>
         <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
-        <Weather />
+        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
       </FiltersWrapper>
-      <WeatherForecast />
+      <div style={toggleWeather ? {display: "block"} : {display: "none"}}>
+        <WeatherForecast />
+      </div> 
     </SearchBarWrapper>
   );
 };
@@ -51,6 +54,5 @@ const SearchBarWrapper = styled.div`
 `;
 const FiltersWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
   margin: 10px 0;
 `;

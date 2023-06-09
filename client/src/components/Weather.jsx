@@ -7,6 +7,9 @@ const WeatherContainer = styled.div`
     align-items: center;
     padding: 5px 10px;
     border-radius: 20px;
+    &:hover{
+        cursor: pointer;
+    }
 `;
 
 const WeatherIcon = styled.img`
@@ -21,7 +24,7 @@ const fetchWeather = async(signal) => {
     return fetchjson.weather[0];
 }
 
-const Weather = () => {
+const Weather = ({toggleWeather, setToggleWeather}) => {
     const [weather, setWeather] = useState({main: "", icon:""});
     useEffect(() => {
         const controller = new AbortController();
@@ -38,7 +41,10 @@ const Weather = () => {
         }
     },[]);
     return (
-        <WeatherContainer>
+        <WeatherContainer 
+            onClick={() => setToggleWeather(!toggleWeather)} 
+            style={toggleWeather ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
+        >
             <WeatherIcon src={`https://openweathermap.org/img/wn/${weather.icon}.png`}/>
             Météo
         </WeatherContainer>
