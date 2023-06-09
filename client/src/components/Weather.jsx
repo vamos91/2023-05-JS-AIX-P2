@@ -42,8 +42,8 @@ const Weather = ({toggleWeather, setToggleWeather}) => {
     },[]);
     return (
         <WeatherContainer 
-            onClick={() => setToggleWeather(!toggleWeather)} 
-            style={toggleWeather ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
+            onClick={() => setToggleWeather(previous => ({ ...previous, enable: !previous.enable}))} 
+            style={toggleWeather.enable ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
         >
             <WeatherIcon src={`https://openweathermap.org/img/wn/${weather.icon}.png`}/>
             Météo

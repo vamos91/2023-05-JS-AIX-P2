@@ -13,7 +13,17 @@ const fetchMusee = async (apiQuery) => {
 };
 
 const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
-  const [toggleWeather, setToggleWeather] = useState(false);
+  const [toggleWeather, setToggleWeather] = useState({
+    enable: false,
+    days : [
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false}
+    ]
+  });
 
   useEffect(() => {
     (async() => {
@@ -35,8 +45,8 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
         <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
         <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
       </FiltersWrapper>
-      <div style={toggleWeather ? {display: "block"} : {display: "none"}}>
-        <WeatherForecast />
+      <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
+        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
       </div> 
     </SearchBarWrapper>
   );
