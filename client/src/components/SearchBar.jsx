@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import RangeBar from "./RangeBar";
+import WeatherForecast from "./WeatherForecast";
 
 const fetchMusee = async (apiQuery) => {
   const returnFetch = await fetch(
@@ -29,6 +30,7 @@ const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
   return (
     <SearchBarWrapper>
       <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
+      <WeatherForecast />
     </SearchBarWrapper>
   );
 };
@@ -39,5 +41,6 @@ const SearchBarWrapper = styled.div`
   position: absolute;
   top: 10px;
   left: 60%;
+  display: flex;
   /* background-color: white; */
 `;
