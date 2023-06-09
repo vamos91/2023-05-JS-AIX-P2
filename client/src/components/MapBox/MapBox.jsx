@@ -6,25 +6,50 @@ import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import PopUp from "./PopUp";
 
-const MapBox = ({ museums, perimeter, setCenter }) => {
-  // console.log(museums);
-
+const MapBox = ({ museums, perimeter, setCenter, center }) => {
+  console.log(museums);
+  console.log(center.lng);
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
-  const marseilleLng = 5.36978;
-  const marseilleLat = 43.296482;
+  // const marseilleLng = 5.36978;
+  // const marseilleLat = 43.296482;
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(marseilleLng);
-  const [lat, setLat] = useState(marseilleLat);
+  const [mapInit, setMapInit] = useState(false);
   const [zoom, setZoom] = useState(12);
+  const [lngLat, setLngLat] = useState();
   const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }));
+  console.log(lngLat);
+  const mapData = museums.map((record) => {
+    return {
+      type: "Feature",
+      properties: {
+        image: "https://picsum.photos/300/200",
+        name:
+          record.fields.nomoff.charAt(0).toUpperCase() +
+          record.fields.nomoff.slice(1),
+        place: record.fields.lieu_m ?? "",
+        address: record.fields.adrl1_m ?? "",
+        cp: record.fields.cp_m ?? "",
+        city: record.fields.ville_m ?? "",
+        id: record.fields.ref,
+        icon: "museum-pin",
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [
+          record.fields.geolocalisation_latlong[1],
+          record.fields.geolocalisation_latlong[0],
+        ], //[-77.038659, 38.931567],
+      },
+    };
+  });
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/--noora--/cli2xoaez008c01qy7hmi3zb1",
-      center: [lng, lat],
+      center: [center.lng, center.lat],
       zoom: zoom,
       keyboard: true,
       trackResize: true,
@@ -33,38 +58,13 @@ const MapBox = ({ museums, perimeter, setCenter }) => {
       maxZoom: 19,
       attributionControl: false,
     });
-    // create map data object
-    const mapData = museums.map((record) => {
-      return {
-        type: "Feature",
-        properties: {
-          image: "https://picsum.photos/300/200",
-          name:
-            record.fields.nomoff.charAt(0).toUpperCase() +
-            record.fields.nomoff.slice(1),
-          place: record.fields.lieu_m ?? "",
-          address: record.fields.adrl1_m ?? "",
-          cp: record.fields.cp_m ?? "",
-          city: record.fields.ville_m ?? "",
-          id: record.fields.ref,
-          icon: "museum-pin",
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [
-            record.fields.geolocalisation_latlong[1],
-            record.fields.geolocalisation_latlong[0],
-          ], //[-77.038659, 38.931567],
-        },
-      };
-    });
-    console.log(mapData);
 
     map.current.on("move", () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
+      setLngLat(map.current.getCenter());
+      // setCenter(map.current.getCenter()); // TROP DE FETCHS !!! ENLEVE POUR DEV
       setZoom(map.current.getZoom().toFixed(2));
-    });
+      });
+
     map.current.on("load", () => {
       map.current.loadImage(
         // "https://i.postimg.cc/QC9j8Xpk/loc-Gard-XS.png", // GARDENS
@@ -172,22 +172,40 @@ const MapBox = ({ museums, perimeter, setCenter }) => {
           center: [position.coords.longitude, position.coords.latitude],
           essential: true, // this animation is considered essential with respect to prefers-reduced-motion
         });
-        setLng(position.coords.longitude);
-        setLat(position.coords.latitude);
+        setCenter({
+          lng: position.coords.longitude,
+          lat: position.coords.latitude,
+        });
       });
     }
+    setMapInit(true);
   }, []);
   // console.log(navigator);
 
   useEffect(() => {
-    // Calcul le zoom par rapport au périmètre et au centre
-    const mapSize = map.current.getCanvas();
-    const maxPixels = mapSize.width > mapSize.height ? mapSize.height/2 : mapSize.width/2;
-    const metersPerPixel = perimeter / maxPixels;
-    const zoom = (((Math.log(40075016.686 * Math.cos(7.25*Math.PI/180)) - Math.log(metersPerPixel)) / Math.LN2) - 8);
+    if (mapInit) {
+      // Calcul le zoom par rapport au périmètre et au centre
+      const mapSize = map.current.getCanvas();
+      const maxPixels =
+        mapSize.width > mapSize.height ? mapSize.height / 2 : mapSize.width / 2;
+      const metersPerPixel = perimeter / maxPixels;
+      const zoom =
+        (Math.log(40075016.686 * Math.cos((7.25 * Math.PI) / 180)) -
+          Math.log(metersPerPixel)) /
+          Math.LN2 -
+        8;
 
-    map.current.setZoom(zoom);
-    setCenter(map.current.getCenter()); 
+      map.current.setZoom(zoom);
+      setCenter(map.current.getCenter());
+
+      console.log(map.current.getSource("places"));
+      console.log("mapdata useff2");
+      console.log(mapData);
+      map.current.getSource("places").setData({
+        type: "FeatureCollection",
+        features: mapData,
+      });
+    }
   }, [perimeter]);
 
   return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;
@@ -196,4 +214,3 @@ export default MapBox;
 const MapWrapper = style.div`
  height: 100vh;
  `;
-
