@@ -23,7 +23,6 @@ const Weather = () => {
 
         (async() => {
             const fetchjson = await fetchWeather(signal);
-            console.log(fetchjson)
             setWeather(fetchjson.main);
         })();
         
