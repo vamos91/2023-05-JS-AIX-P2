@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import RangeBar from "./RangeBar";
-import Weather from "./Weather";
-import WeatherForecast from "./WeatherForecast";
+import Weather from "./Weather/Weather";
+import WeatherForecast from "./Weather/WeatherForecast";
 
 const fetchMusee = async (apiQuery) => {
   const returnFetch = await fetch(
