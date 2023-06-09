@@ -40,7 +40,7 @@ const Weather = () => {
     return (
         <WeatherContainer>
             <WeatherIcon src={`https://openweathermap.org/img/wn/${weather.icon}.png`}/>
-            {`${weather.main} today`}
+            Météo
         </WeatherContainer>
     );
 };

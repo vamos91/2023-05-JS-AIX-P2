@@ -26,9 +26,10 @@ const fetchWeather = async(signal) => {
         "https://api.openweathermap.org/data/2.5/forecast?lat=43.29&lon=5.36&appid="+process.env.REACT_APP_OPENWEATHERMAP_KEY, 
     {signal});
     const fetchjson = await returnFetch.json();
-    for(let i=1; i<6; i++){
-        weather5Days.push(fetchjson.list[i*8-1]);
+    for(let i=0; i<5; i++){
+        weather5Days.push(fetchjson.list[i*8]);
     }
+    weather5Days.push(fetchjson.list[39]);
     return weather5Days;
 }
 
@@ -54,7 +55,7 @@ const WeatherForecast = () => {
                 weather5Days && weather5Days.map((day, i) => (
                     <BoxWeatherDay key={'day'+i}>
                         <WeatherIcon src={`https://openweathermap.org/img/wn/${day.weather[0].icon}.png`}/>
-                        {`${day.weather[0].main} d+${i+1}`}
+                        {`${day.weather[0].main} ${i==0 ? 'today' : 'd+'+i}`}
                     </BoxWeatherDay>
                 ))
             }
