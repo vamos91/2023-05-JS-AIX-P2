@@ -9,7 +9,7 @@ function App() {
   // const [musees, setMusees] = useState([]);
   // console.log(musees);
 
-  const musees = useSelector(state => state.records.museums);
+  const musees = useSelector(state => state.records.mixed);
 
   return (
     <div>

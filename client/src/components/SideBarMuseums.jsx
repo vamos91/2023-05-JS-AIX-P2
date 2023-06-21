@@ -28,7 +28,7 @@ const SideBar = styled.div`
 `;
 
 const SideBarMuseums = ({ isLoading }) => {
-  const musees = useSelector(state => state.records.museums);
+  const musees = useSelector(state => state.records.mixed);
 
   return (
     <SideBar>
