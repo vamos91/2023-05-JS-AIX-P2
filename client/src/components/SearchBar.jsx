@@ -3,18 +3,29 @@ import styled from "styled-components";
 import {useDispatch} from 'react-redux';
 import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords} from '../features/museum/recordsAPISlice';
 import RangeBar from "./RangeBar";
-import Weather from "./Weather";
-import WeatherForecast from "./WeatherForecast";
+import Weather from "./Weather/Weather";
+import WeatherForecast from "./Weather/WeatherForecast";
 
 const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
+  const [toggleWeather, setToggleWeather] = useState({
+    enable: false,
+    days : [
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false}
+    ]
+  });
   const dispatch = useDispatch();
-  const [toggleWeather, setToggleWeather] = useState(false);
   const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
   const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
 
   const fetchMusee = async (url, reducerDispatch) => {
     const returnFetch = await fetch(url);
     const fetchjson = await returnFetch.json();
+    console.log('toto',fetchjson)
     dispatch(reducerDispatch(fetchjson));
   };
 
@@ -47,10 +58,10 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
     <SearchBarWrapper>
       <FiltersWrapper>
         <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
-        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
+        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
       </FiltersWrapper>
-      <div style={toggleWeather ? {display: "block"} : {display: "none"}}>
-        <WeatherForecast />
+      <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
+        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
       </div> 
     </SearchBarWrapper>
   );
