@@ -1,4 +1,4 @@
 /node_modules
 /client/node_modules
-./client/.env
-./client/.eslintignore
+/client/.env
+/client/.eslintignore

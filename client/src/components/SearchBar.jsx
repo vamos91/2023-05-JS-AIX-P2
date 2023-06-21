@@ -1,10 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {useDispatch} from 'react-redux';
 import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords} from '../features/museum/recordsAPISlice';
+import RangeBar from "./RangeBar";
+import Weather from "./Weather";
+import WeatherForecast from "./WeatherForecast";
 
-const SearchBar = ({ setLoading }) => {
+const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
   const dispatch = useDispatch();
+  const [toggleWeather, setToggleWeather] = useState(false);
+  const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
+  const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
 
   const fetchMusee = async (url, reducerDispatch) => {
     const returnFetch = await fetch(url);
@@ -17,10 +23,10 @@ const SearchBar = ({ setLoading }) => {
 
     const firstFetchMixed = async () => {
       await fetchMusee(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=ville_m=Marseille", 
+        urlBasicMuseums+"&q=ville_m=Marseille", 
         newMuseumsRecordsAPI);
       await fetchMusee(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables&q=commune=Marseille", 
+        urlBasicGardens+"&q=commune=Marseille", 
         newGardensRecordsAPI);
 
       dispatch(mixeRecords());
@@ -31,7 +37,23 @@ const SearchBar = ({ setLoading }) => {
     setLoading(false);
   }, []);
 
-  return <SearchBarWrapper>SEARCHBAR</SearchBarWrapper>;
+  useEffect(() => {
+    (async() => {
+      await fetchMusee(urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, newMuseumsRecordsAPI);
+    })();
+  }, [perimeter]);
+
+  return (
+    <SearchBarWrapper>
+      <FiltersWrapper>
+        <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
+        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} />
+      </FiltersWrapper>
+      <div style={toggleWeather ? {display: "block"} : {display: "none"}}>
+        <WeatherForecast />
+      </div> 
+    </SearchBarWrapper>
+  );
 };
 
 export default SearchBar;
@@ -40,5 +62,11 @@ const SearchBarWrapper = styled.div`
   position: absolute;
   top: 10px;
   left: 60%;
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  /* background-color: white; */
+`;
+const FiltersWrapper = styled.div`
+  display: flex;
+  margin: 10px 0;
 `;

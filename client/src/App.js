@@ -6,16 +6,16 @@ import {useSelector} from 'react-redux';
 
 function App() {
   const [loading, setLoading] = useState(true);
-  // const [musees, setMusees] = useState([]);
-  // console.log(musees);
-
   const musees = useSelector(state => state.records.mixed);
+  const [perimeter, setPerimeter] = useState(10000);
+  const [center, setCenter] = useState({lng: 5.36978,lat: 43.296482});
 
+  console.log(musees);
   return (
     <div>
-      <SearchBar setLoading={setLoading}/>
+      <SearchBar perimeter={perimeter} setPerimeter={setPerimeter} center={center} setLoading={setLoading} />
       {musees && <SideBarMuseums isLoading={loading}/>}
-      {musees && <MapBox museums={musees} />}
+      {musees && <MapBox museums={musees} perimeter={perimeter} setCenter={setCenter} />}
     </div>
   );
 }
