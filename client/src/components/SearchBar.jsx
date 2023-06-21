@@ -1,23 +1,22 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import {useDispatch} from 'react-redux';
+import {newMuseumsRecordsAPI} from '../features/museum/recordsAPISlice';
 
-const SearchBar = ({ musees, setMusees, setLoading }) => {
+const SearchBar = ({ setLoading }) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     setLoading(true);
-    const fetchMusee = async () => {
-      const returnFetch = await fetch(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=ville_m=Marseille"
-        //  "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=&rows=100&facet=dompal&facet=region"
-      );
+    const fetchMusee = async (url) => {
+      const returnFetch = await fetch(url);
       const fetchjson = await returnFetch.json();
-      setMusees(fetchjson.records);
-      // console.log(fetchjson.records)
+      dispatch(newMuseumsRecordsAPI(fetchjson.records));
     };
-    fetchMusee();
-    // const timer = setTimeout(() => {
+    fetchMusee("https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=ville_m=Marseille");
+    // fetchMusee("https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables&q=commune=Marseille");
+
     setLoading(false);
-    // }, 2000);
-    // return () => clearTimeout(timer);
   }, []);
 
   return <SearchBarWrapper>SEARCHBAR</SearchBarWrapper>;
