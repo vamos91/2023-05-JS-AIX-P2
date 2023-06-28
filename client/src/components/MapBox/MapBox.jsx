@@ -5,10 +5,14 @@ import style from "styled-components";
 import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import PopUp from "./PopUp";
+import { useDispatch } from "react-redux";
+import { setCenterRedux } from "../../features/mapBox/mapBoxAPISlice";
+import { useSelector } from "react-redux";
 
-const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
-  // console.log(museums);
-  console.log(perimeter);
+const MapBox = ({ museums, perimeter, loc }) => {
+  const dispatch = useDispatch();
+  const musees = useSelector((state) => state.records.mixed);
+  const center = useSelector((state) => state.mapbox.center);
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -16,7 +20,7 @@ const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
   const [zoom, setZoom] = useState(12);
   const [lngLat, setLngLat] = useState();
   const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }));
-
+  console.log("musees redux", musees);
   const mapData = museums.map((record) => {
     return {
       type: "Feature",
@@ -58,7 +62,9 @@ const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
     });
 
     map.current.on("move", () => {
-      setCenter(map.current.getCenter());
+      const centerMap = map.current.getCenter();
+      console.log("onmove", centerMap);
+      dispatch(setCenterRedux({ lng: centerMap.lng, lat: centerMap.lat }));
       setZoom(map.current.getZoom().toFixed(2));
     });
 
@@ -190,19 +196,15 @@ const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
         essential: true, // this animation is considered essential with respect to prefers-reduced-motion
       });
       map.current.setZoom(zoom);
-      setCenter(map.current.getCenter());
-
-      // if(loc){
-      // map.current.flyTo({
-      //   center: [center.lng, center.lat],
-      //   essential: true, // this animation is considered essential with respect to prefers-reduced-motion
-      // });
       // setCenter(map.current.getCenter());
-      // }
-      // setCenter({
-      //   lng: position.coords.longitude,
-      //   lat: position.coords.latitude,
-      // });
+      const centerMap = map.current.getCenter();
+      console.log(centerMap);
+      dispatch(setCenterRedux({ lng: centerMap.lng, lat: centerMap.lat }));
+
+      map.current.flyTo({
+        center: [center.lng, center.lat],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      });
 
       if (map.current.getSource("places")) {
         map.current.getSource("places").setData({

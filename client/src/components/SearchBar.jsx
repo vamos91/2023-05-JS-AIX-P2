@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   newMuseumsRecordsAPI,
   newGardensRecordsAPI,
   mixeRecords,
 } from "../features/museum/recordsAPISlice";
+import { setCenterRedux } from "../features/mapBox/mapBoxAPISlice";
 import RangeBar from "./RangeBar";
 import Weather from "./Weather/Weather";
 import WeatherForecast from "./Weather/WeatherForecast";
@@ -14,8 +15,6 @@ const SearchBar = ({
   setLoading,
   perimeter,
   setPerimeter,
-  center,
-  setCenter,
   userLoc,
   setUserLoc,
 }) => {
@@ -31,6 +30,7 @@ const SearchBar = ({
     ],
   });
   const dispatch = useDispatch();
+  const center = useSelector((state) => state.mapbox.center);
   const urlBasicMuseums =
     "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
   const urlBasicGardens =
@@ -44,7 +44,8 @@ const SearchBar = ({
   };
 
   useEffect(() => {
-    setLoading(true);
+
+    // setLoading(true);
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log("position");
@@ -52,12 +53,16 @@ const SearchBar = ({
           lng: position.coords.longitude,
           lat: position.coords.latitude,
         });
-        setCenter({
-          lng: position.coords.longitude,
-          lat: position.coords.latitude,
-        });
+        // setCenter({
+        //   lng: position.coords.longitude,
+        //   lat: position.coords.latitude,
+        // });
+       dispatch(setCenterRedux({
+        lng: position.coords.longitude,
+        lat: position.coords.latitude,
+      }));
+        setUserLoc(true);
       });
-      setUserLoc(true);
     }
     const firstFetchMixed = async () => {
       await fetchMusee(
@@ -98,7 +103,6 @@ const SearchBar = ({
 
     // })();
   }, [perimeter, userLoc]);
-  console.log(perimeter);
   return (
     <SearchBarWrapper>
       <FiltersWrapper>

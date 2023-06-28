@@ -8,11 +8,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const musees = useSelector((state) => state.records.mixed);
   const [perimeter, setPerimeter] = useState(10000);
-  const [center, setCenter] = useState({ lng: 5.36978, lat: 43.296482 });
   const [userLocalisation, setUserLocalisation] = useState(false);
   // console.log(musees);
   console.log(userLocalisation);
-  console.log('musees app.js',musees);
+  console.log("musees app.js", musees);
   // Move map to users location if permission
   // if ("geolocation" in navigator) {
   //   setUserLocalisation(true);
@@ -50,20 +49,12 @@ function App() {
         setLoading={setLoading}
         perimeter={perimeter}
         setPerimeter={setPerimeter}
-        center={center}
-        setCenter={setCenter}
-        userLoc={userLocalisation}
+          userLoc={userLocalisation}
         setUserLoc={setUserLocalisation}
       />
       {musees && <SideBarMuseums isLoading={loading} />}
       {musees && (
-        <MapBox
-          museums={musees}
-          perimeter={perimeter}
-          setCenter={setCenter}
-          center={center}
-          loc={userLocalisation}
-        />
+        <MapBox museums={musees} perimeter={perimeter} loc={userLocalisation} />
       )}
     </div>
   );
