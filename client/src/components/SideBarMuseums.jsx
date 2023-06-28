@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MuseumListCard from "./MuseumListCard";
 import styled from "styled-components";
 import Spinner  from "./Spinner";
@@ -28,25 +28,38 @@ const SideBar = styled.div`
 `;
 
 const SideBarMuseums = ({ isLoading }) => {
-  const musees = useSelector(state => state.records.mixed);
+  const filterMuseums = useSelector(state => state.records.filterMuseums);
+  const filterGardens = useSelector(state => state.records.filterGardens);
+  const mixed = useSelector(state => state.records.mixed);
+  const museums = useSelector(state => state.records.museums);
+  const gardens = useSelector(state => state.records.gardens);
+
+  const elementsFilteredToMap = (elementsArray) => {
+    return (elementsArray.map((element) => (
+      <MuseumListCard
+        key={element.recordid}
+        nomMusee={element.fields.nomoff}
+        addresse={element.fields.adrl1_m}
+        codePostal={element.fields.cp_m}
+        ville={element.fields.ville_m}
+        numeroTelphone={element.fields.tel_m}
+        site={element.fields.url_m}
+      />
+    )));
+  }
 
   return (
     <SideBar>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        musees.map((musee) => (
-          <MuseumListCard
-            key={musee.recordid}
-            nomMusee={musee.fields.nomoff}
-            addresse={musee.fields.adrl1_m}
-            codePostal={musee.fields.cp_m}
-            ville={musee.fields.ville_m}
-            numeroTelphone={musee.fields.tel_m}
-            site={musee.fields.url_m}
-          />
-        ))
-      )}
+      {isLoading && <Spinner />}
+      {
+        !isLoading && filterMuseums && filterGardens && elementsFilteredToMap(mixed)
+      }
+      {
+        !isLoading && filterMuseums && !filterGardens && elementsFilteredToMap(museums)
+      }
+      {
+        !isLoading && !filterMuseums && filterGardens && elementsFilteredToMap(gardens)
+      }
     </SideBar>
   );
 };

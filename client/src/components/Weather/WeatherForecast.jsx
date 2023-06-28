@@ -36,15 +36,14 @@ const fetchWeather = async(signal, center) => {
     return weather5Days;
 }
 
-const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
-    const [weather5Days, setWeather5Days] = useState();
+const WeatherForecast = ({toggleWeather, setToggleWeather, center, weather5Days, setWeather5Days}) => {
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
 
         (async() => {
             const fetchjson = await fetchWeather(signal, center);
-            console.log(fetchjson)
+            console.log('fetch meteo 5days',fetchjson)
             setWeather5Days(fetchjson);
         })();
         
@@ -55,7 +54,6 @@ const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
 
     const toogleWeatherBox = (index) => {
         const tmp = toggleWeather.days.map((day,i) => i == index ? {enable: !day.enable} : {enable: false});
-        console.log(tmp)
         setToggleWeather(previous => ({...previous, days: tmp}));
     }
     return (

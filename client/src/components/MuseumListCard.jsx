@@ -1,12 +1,4 @@
 import React from "react";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardText,
-  Button,
-} from "reactstrap";
 import styled from "styled-components";
 import { SiGooglemaps } from "react-icons/si";
 import { RiSmartphoneFill } from "react-icons/ri";
@@ -36,6 +28,24 @@ const Info = styled.div`
   flex-direction: column;
 `;
 
+const Card = styled.div`
+  margin-left: 10px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  width: 30rem;
+  border-bottom: 1px solid lightGrey;
+  padding-bottom: 5px;
+  z-index: 1000;
+`;
+
+const CardBody = styled.div`
+  width: 100%;
+`;
+
+const CardTitle = styled.h3`
+`;
+
 function MuseumListCard({
   nomMusee,
   addresse,
@@ -45,21 +55,10 @@ function MuseumListCard({
   site,
 }) {
   return (
-    <Card
-      style={{
-        marginLeft: "10px",
-        display: "flex",
-        alignItems: "flex-start",
-        flexDirection: "row-reverse",
-        width: "30rem",
-        borderBottom: "1px solid lightGrey",
-        paddingBottom: "5px",
-        zIndex: "1000",
-      }}
-    >
+    <Card>
       <Image alt="Sample" src="https://picsum.photos/300/200" />
-      <CardBody style={{ width: "100%" }}>
-        <CardTitle tag="h3">
+      <CardBody >
+        <CardTitle >
           {nomMusee.charAt(0).toUpperCase() + nomMusee.slice(1)}
         </CardTitle>
         <Info>
