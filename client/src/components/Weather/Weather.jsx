@@ -32,7 +32,7 @@ const Weather = ({toggleWeather, setToggleWeather, center}) => {
 
         (async() => {
             const fetchjson = await fetchWeather(signal, center);
-            console.log(fetchjson)
+            console.log('fetch meteo',fetchjson)
             setWeather(fetchjson);
         })();
         

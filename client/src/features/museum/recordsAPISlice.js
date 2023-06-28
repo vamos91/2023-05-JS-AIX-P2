@@ -5,7 +5,9 @@ export const recordsAPISlice = createSlice({
     initialState: {
         museums: null,
         gardens: null,
-        mixed: null
+        mixed: null,
+        filterMuseums: true,
+        filterGardens: true
     },
     reducers: {
         newMuseumsRecordsAPI: (state, action) => {
@@ -37,10 +39,14 @@ export const recordsAPISlice = createSlice({
         },
         mixeRecords: (state) => {
             state.mixed = [...state.museums, ...state.gardens];
+        },
+        setFilter: (state, action) => {
+            state.filterMuseums = action.payload.filterMuseums;
+            state.filterGardens = action.payload.filterGardens;
         }
     }
 });
 
-export const {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords} = recordsAPISlice.actions
+export const {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords, setFilter} = recordsAPISlice.actions
 
 export default recordsAPISlice.reducer;

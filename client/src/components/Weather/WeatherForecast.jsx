@@ -44,7 +44,7 @@ const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
 
         (async() => {
             const fetchjson = await fetchWeather(signal, center);
-            console.log(fetchjson)
+            console.log('fetch meteo 5days',fetchjson)
             setWeather5Days(fetchjson);
         })();
         
@@ -55,7 +55,6 @@ const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
 
     const toogleWeatherBox = (index) => {
         const tmp = toggleWeather.days.map((day,i) => i == index ? {enable: !day.enable} : {enable: false});
-        console.log(tmp)
         setToggleWeather(previous => ({...previous, days: tmp}));
     }
     return (

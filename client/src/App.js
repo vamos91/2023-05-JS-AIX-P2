@@ -10,7 +10,7 @@ function App() {
   const [perimeter, setPerimeter] = useState(10000);
   const [center, setCenter] = useState({lng: 5.36978,lat: 43.296482});
 
-  console.log(musees);
+  console.log('app js',musees);
   return (
     <div>
       <SearchBar perimeter={perimeter} setPerimeter={setPerimeter} center={center} setLoading={setLoading} />
