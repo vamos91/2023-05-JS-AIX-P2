@@ -1,30 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {useDispatch} from 'react-redux';
+import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords} from '../features/museum/recordsAPISlice';
 import RangeBar from "./RangeBar";
+import Weather from "./Weather/Weather";
+import WeatherForecast from "./Weather/WeatherForecast";
 
-const fetchMusee = async (apiQuery) => {
-  const returnFetch = await fetch(
-    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q="+apiQuery
-  );
-  const fetchjson = await returnFetch.json();
-  return fetchjson.records;
-};
-
-const SearchBar = ({
-  musees,
-  setMusees,
-  perimeter,
-  setPerimeter,
-  center,
-  setCenter,
+const SearchBar = ({ setLoading, perimeter, setPerimeter, center ,   setCenter,
   userLoc,
-  setUserLoc,
-}) => {
+  setUserLoc,}) => {
+  const [toggleWeather, setToggleWeather] = useState({
+    enable: false,
+    days : [
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false}
+    ]
+  });
+  const dispatch = useDispatch();
+  const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
+  const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
+
+  const fetchMusee = async (url, reducerDispatch) => {
+    const returnFetch = await fetch(url);
+    const fetchjson = await returnFetch.json();
+    console.log('toto',fetchjson)
+    dispatch(reducerDispatch(fetchjson));
+  };
+
   useEffect(() => {
-    (async () => {
-      const fetchjson = await fetchMusee("ville_m=Marseille");
-      setMusees(fetchjson);
-    })();
+    setLoading(true);
     if ("geolocation" in navigator) {
      
       navigator.geolocation.getCurrentPosition((position) => {
@@ -40,36 +48,38 @@ const SearchBar = ({
       });
       setUserLoc(true);
     }
-   
+    const firstFetchMixed = async () => {
+      await fetchMusee(
+        urlBasicMuseums+"&q=ville_m=Marseille", 
+        newMuseumsRecordsAPI);
+      await fetchMusee(
+        urlBasicGardens+"&q=commune=Marseille", 
+        newGardensRecordsAPI);
+
+      dispatch(mixeRecords());
+    }
+    
+    firstFetchMixed();
+
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    console.log("center");
-    console.log(center);
-       if (userLoc) {
-      // navigator.geolocation.getCurrentPosition((position) => {
-      //   console.log("position");
-      //   console.log({
-      //     lng: position.coords.longitude,
-      //     lat: position.coords.latitude,
-      //   } );
-      //   setCenter({
-      //     lng: position.coords.longitude,
-      //     lat: position.coords.latitude,
-      //   });
-      // });
-    }
-    (async () => {
-      const fetchjson = await fetchMusee(
-        `&geofilter.distance=${center.lat},${center.lng},${perimeter}`
-      );
-      setMusees(fetchjson);
+    (async() => {
+      await fetchMusee(urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, newMuseumsRecordsAPI);
+
     })();
   }, [perimeter, userLoc]);
 
   return (
     <SearchBarWrapper>
-      <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
+      <FiltersWrapper>
+        <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
+        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+      </FiltersWrapper>
+      <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
+        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+      </div> 
     </SearchBarWrapper>
   );
 };
@@ -80,5 +90,11 @@ const SearchBarWrapper = styled.div`
   position: absolute;
   top: 10px;
   left: 60%;
+  display: flex;
+  flex-direction: column;
   /* background-color: white; */
+`;
+const FiltersWrapper = styled.div`
+  display: flex;
+  margin: 10px 0;
 `;
