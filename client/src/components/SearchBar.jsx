@@ -1,46 +1,57 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {useDispatch} from 'react-redux';
-import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords} from '../features/museum/recordsAPISlice';
+import { useDispatch } from "react-redux";
+import {
+  newMuseumsRecordsAPI,
+  newGardensRecordsAPI,
+  mixeRecords,
+} from "../features/museum/recordsAPISlice";
 import RangeBar from "./RangeBar";
 import Weather from "./Weather/Weather";
 import WeatherForecast from "./Weather/WeatherForecast";
 
-const SearchBar = ({ setLoading, perimeter, setPerimeter, center ,   setCenter,
+const SearchBar = ({
+  setLoading,
+  perimeter,
+  setPerimeter,
+  center,
+  setCenter,
   userLoc,
-  setUserLoc,}) => {
+  setUserLoc,
+}) => {
   const [toggleWeather, setToggleWeather] = useState({
     enable: false,
-    days : [
-      {enable: false},
-      {enable: false},
-      {enable: false},
-      {enable: false},
-      {enable: false},
-      {enable: false}
-    ]
+    days: [
+      { enable: false },
+      { enable: false },
+      { enable: false },
+      { enable: false },
+      { enable: false },
+      { enable: false },
+    ],
   });
   const dispatch = useDispatch();
-  const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
-  const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
+  const urlBasicMuseums =
+    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
+  const urlBasicGardens =
+    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
 
   const fetchMusee = async (url, reducerDispatch) => {
     const returnFetch = await fetch(url);
     const fetchjson = await returnFetch.json();
-    console.log('toto',fetchjson)
+    console.log("toto", fetchjson);
     dispatch(reducerDispatch(fetchjson));
   };
 
   useEffect(() => {
     setLoading(true);
     if ("geolocation" in navigator) {
-     
       navigator.geolocation.getCurrentPosition((position) => {
         console.log("position");
         console.log({
           lng: position.coords.longitude,
           lat: position.coords.latitude,
-        } );
+        });
         setCenter({
           lng: position.coords.longitude,
           lat: position.coords.latitude,
@@ -50,36 +61,65 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center ,   setCenter,
     }
     const firstFetchMixed = async () => {
       await fetchMusee(
-        urlBasicMuseums+"&q=ville_m=Marseille", 
-        newMuseumsRecordsAPI);
+        urlBasicMuseums + "&q=ville_m=Marseille",
+        newMuseumsRecordsAPI
+      );
       await fetchMusee(
-        urlBasicGardens+"&q=commune=Marseille", 
-        newGardensRecordsAPI);
+        urlBasicGardens + "&q=commune=Marseille",
+        newGardensRecordsAPI
+      );
 
       dispatch(mixeRecords());
-    }
-    
+    };
+
     firstFetchMixed();
 
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    (async() => {
-      await fetchMusee(urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, newMuseumsRecordsAPI);
+    const perimeterFetchMixed = async () => {
+      await fetchMusee(
+        urlBasicMuseums +
+          `&geofilter.distance=${center.lat},${center.lng},${perimeter}`,
+        newMuseumsRecordsAPI
+      );
+      await fetchMusee(
+        urlBasicGardens +
+          `&geofilter.distance=${center.lat},${center.lng},${perimeter}`,
+        newGardensRecordsAPI
+      );
+      dispatch(mixeRecords());
+    };
+    perimeterFetchMixed();
 
-    })();
+    // (async() => {
+    //   await fetchMusee(urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, newMuseumsRecordsAPI);
+
+    // })();
   }, [perimeter, userLoc]);
-
+  console.log(perimeter);
   return (
     <SearchBarWrapper>
       <FiltersWrapper>
         <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
-        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+        <Weather
+          toggleWeather={toggleWeather}
+          setToggleWeather={setToggleWeather}
+          center={center}
+        />
       </FiltersWrapper>
-      <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
-        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
-      </div> 
+      <div
+        style={
+          toggleWeather.enable ? { display: "block" } : { display: "none" }
+        }
+      >
+        <WeatherForecast
+          toggleWeather={toggleWeather}
+          setToggleWeather={setToggleWeather}
+          center={center}
+        />
+      </div>
     </SearchBarWrapper>
   );
 };

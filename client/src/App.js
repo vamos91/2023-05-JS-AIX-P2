@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import MapBox from "./components/MapBox/MapBox";
 import SideBarMuseums from "./components/SideBarMuseums";
 import SearchBar from "./components/SearchBar";
-import {useSelector} from 'react-redux';
+import { useSelector } from "react-redux";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const musees = useSelector(state => state.records.mixed);
+  const musees = useSelector((state) => state.records.mixed);
   const [perimeter, setPerimeter] = useState(10000);
   const [center, setCenter] = useState({ lng: 5.36978, lat: 43.296482 });
   const [userLocalisation, setUserLocalisation] = useState(false);
   // console.log(musees);
   console.log(userLocalisation);
+  console.log('musees app.js',musees);
   // Move map to users location if permission
   // if ("geolocation" in navigator) {
   //   setUserLocalisation(true);
@@ -46,8 +47,7 @@ function App() {
   return (
     <div>
       <SearchBar
-        musees={musees}
-        setMusees={setMusees}
+        setLoading={setLoading}
         perimeter={perimeter}
         setPerimeter={setPerimeter}
         center={center}

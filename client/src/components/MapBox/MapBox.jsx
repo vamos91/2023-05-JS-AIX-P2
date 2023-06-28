@@ -7,6 +7,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import PopUp from "./PopUp";
 
 const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
+  // console.log(museums);
+  console.log(perimeter);
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -169,6 +171,9 @@ const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
     console.log(center);
     console.log("MapBox UE2 [perimetre] museums");
     console.log(museums);
+    console.log("MapBox UE2 [perimetre] perimeter");
+    console.log(perimeter);
+
     if (mapInit) {
       // Calcul le zoom par rapport au périmètre et au centre
       const mapSize = map.current.getCanvas();

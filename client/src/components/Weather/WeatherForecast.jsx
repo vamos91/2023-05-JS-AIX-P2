@@ -44,18 +44,18 @@ const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
 
         (async() => {
             const fetchjson = await fetchWeather(signal, center);
-            console.log(fetchjson)
+            console.log('fetch meteo',fetchjson)
             setWeather5Days(fetchjson);
         })();
         
         return function cleanup() {
             controller.abort();
         }
-    },[center]);
+    },[]);
 
     const toogleWeatherBox = (index) => {
         const tmp = toggleWeather.days.map((day,i) => i == index ? {enable: !day.enable} : {enable: false});
-        console.log(tmp)
+        // console.log(tmp)
         setToggleWeather(previous => ({...previous, days: tmp}));
     }
     return (
