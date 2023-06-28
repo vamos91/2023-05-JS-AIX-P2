@@ -8,53 +8,15 @@ import WeatherForecast from "./Weather/WeatherForecast";
 import {MdOutlineMuseum} from 'react-icons/md';
 import { LuFlower2 } from "react-icons/lu";
 
-const BoxFilterContainer = styled.div`
-  background-color: white;
-  display: flex;
-  align-items: center;
-  padding: 5px 10px;
-  border-radius: 20px;
-  &:hover{
-      cursor: pointer;
-  }
-`;
-
-const Alert = styled.div`
-  background-color: #FFF3CD;
-  color: #755D16;
-  padding: 10px;
-  border-radius: 20px;
-  width: auto;
-  margin-top: 10px;
-  margin-right: auto;
-  visibility: hidden;
-  opacity: 0;
-  animation-duration: 3s;
-  animation-iteration-count: 1;
-  @keyframes appear {
-    0%{
-      visibility: hidden;
-      opacity: 0;
-    }
-    50%{
-      visibility: visible;
-      opacity: 1;
-    }
-    100%{
-      visibility: hidden;
-      opacity: 0;
-    }
-  }
-`;
-
 const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
   const [toggleFilterMuseums, setToggleFilterMuseums] = useState(true);
   const [toggleFilterGardens, setToggleFilterGardens] = useState(true);
   const [warning, setWarning] = useState(false);
+  const [warningText, setWarningText] = useState('');
   const [toggleWeather, setToggleWeather] = useState({
     enable: false,
     days : [
-      {enable: false},
+      {enable: true},
       {enable: false},
       {enable: false},
       {enable: false},
@@ -62,6 +24,7 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
       {enable: false}
     ]
   });
+  const [weather5Days, setWeather5Days] = useState();
   const dispatch = useDispatch();
   const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
   const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
@@ -113,6 +76,10 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
       dispatch(setFilter({filterMuseums: !toggleFilterMuseums, filterGardens: toggleFilterGardens}));
     }else{
       setWarning(true);
+      setWarningText('You must select one filter at least');
+      setTimeout(() => {
+        setWarning(false);
+      }, 5000);
     }
   }
 
@@ -123,16 +90,30 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
       dispatch(setFilter({filterMuseums: toggleFilterMuseums, filterGardens: !toggleFilterGardens}));
     }else{
       setWarning(true);
+      setWarningText('You must select one filter at least');
+      setTimeout(() => {
+        setWarning(false);
+      }, 5000);
     }
   }
 
   useEffect(() => {
-    if(warning){
-      setTimeout(() => {
+    if(toggleWeather.enable){
+      const weatherDayIndex = toggleWeather.days.map(day => day.enable).indexOf(true);
+      if(weatherDayIndex != -1 && weather5Days[weatherDayIndex].weather[0].id < 800){
+        setToggleFilterGardens(false);
+        setToggleFilterMuseums(true);
+        dispatch(setFilter({filterMuseums: true, filterGardens: false}));
+        setWarning(true);
+        setWarningText('We recommand you to not visit gardens this day');
+        setTimeout(() => {
+          setWarning(false);
+        }, 5000);
+      }else{
         setWarning(false);
-      }, 3000);
+      }
     }
-  }, [warning]);
+  }, [toggleWeather]);
 
   return (
     <SearchBarWrapper>
@@ -155,10 +136,10 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
         <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
       </FiltersWrapper>
       <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
-        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} weather5Days={weather5Days} setWeather5Days={setWeather5Days} center={center} />
       </div>
-      <Alert color="warning" style={warning ? {animationName: 'appear'} : {}}>
-        You must select one filter at least
+      <Alert style={warning ? {animationName: 'appear'} : {}}>
+        {warningText}
       </Alert> 
     </SearchBarWrapper>
   );
@@ -177,4 +158,42 @@ const SearchBarWrapper = styled.div`
 const FiltersWrapper = styled.div`
   display: flex;
   margin: 10px 0;
+`;
+const BoxFilterContainer = styled.div`
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  &:hover{
+      cursor: pointer;
+  }
+`;
+
+const Alert = styled.div`
+  background-color: #FFF3CD;
+  color: #755D16;
+  padding: 10px;
+  border-radius: 20px;
+  width: auto;
+  margin-top: 10px;
+  margin-right: auto;
+  visibility: hidden;
+  opacity: 0;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  @keyframes appear {
+    0%{
+      visibility: hidden;
+      opacity: 0;
+    }
+    50%{
+      visibility: visible;
+      opacity: 1;
+    }
+    100%{
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
 `;

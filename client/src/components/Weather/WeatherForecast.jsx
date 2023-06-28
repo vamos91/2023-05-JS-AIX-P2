@@ -36,8 +36,7 @@ const fetchWeather = async(signal, center) => {
     return weather5Days;
 }
 
-const WeatherForecast = ({toggleWeather, setToggleWeather, center}) => {
-    const [weather5Days, setWeather5Days] = useState();
+const WeatherForecast = ({toggleWeather, setToggleWeather, center, weather5Days, setWeather5Days}) => {
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
