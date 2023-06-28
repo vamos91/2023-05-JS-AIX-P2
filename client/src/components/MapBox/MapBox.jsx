@@ -185,7 +185,7 @@ const MapBox = ({ museums, perimeter, loc }) => {
       const mapSize = map.current.getCanvas();
       const maxPixels =
         mapSize.width > mapSize.height ? mapSize.height / 2 : mapSize.width / 2;
-      const metersPerPixel = perimeter / maxPixels;
+      const metersPerPixel = perimeter*2 / maxPixels;
       const zoom =
         (Math.log(40075016.686 * Math.cos((7.25 * Math.PI) / 180)) -
           Math.log(metersPerPixel)) /
