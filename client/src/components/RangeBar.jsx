@@ -38,7 +38,7 @@ const RangeBar = ({ perimeter, setPerimeter }) => {
         max={20}
         onChange={(e) => setPerimeter(e.target.value*1000)}
       />
-      <label for="exampleRange">{perimeter/1000} km</label>
+      <label htmlFor="exampleRange">{perimeter/1000} km</label>
     </Container>
   );
 };

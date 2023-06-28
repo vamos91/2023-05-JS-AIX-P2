@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {useDispatch} from 'react-redux';
-import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords, setFilter} from '../features/museum/recordsAPISlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords, setFilterMuseums, setFilterGardens} from '../features/museum/recordsAPISlice';
 import RangeBar from "./RangeBar";
 import Weather from "./Weather/Weather";
 import WeatherForecast from "./Weather/WeatherForecast";
@@ -9,8 +9,8 @@ import {MdOutlineMuseum} from 'react-icons/md';
 import { LuFlower2 } from "react-icons/lu";
 
 const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
-  const [toggleFilterMuseums, setToggleFilterMuseums] = useState(true);
-  const [toggleFilterGardens, setToggleFilterGardens] = useState(true);
+  const filterMuseums = useSelector(state => state.records.filterMuseums);
+  const filterGardens = useSelector(state => state.records.filterGardens);
   const [warning, setWarning] = useState(false);
   const [warningText, setWarningText] = useState('');
   const [toggleWeather, setToggleWeather] = useState({
@@ -37,25 +37,6 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-
-    const firstFetchMixed = async () => {
-      await fetchMusee(
-        urlBasicMuseums+"&q=ville_m=Marseille", 
-        newMuseumsRecordsAPI);
-      await fetchMusee(
-        urlBasicGardens+"&q=commune=Marseille", 
-        newGardensRecordsAPI);
-
-      dispatch(mixeRecords());
-    }
-    
-    firstFetchMixed();
-
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
     const firstFetchMixed = async () => {
       await fetchMusee(
         urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, 
@@ -67,27 +48,18 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
       dispatch(mixeRecords());
     }
     firstFetchMixed();
+    setLoading(false);
   }, [perimeter]);
 
-  const filterMuseums = () => {
-    if(toggleFilterGardens){
-      setToggleFilterMuseums(!toggleFilterMuseums);
+  const filterMuseumsGardens = (elementToFilter, stateOfElement, stateOfOther) => {
+    if(stateOfOther){
       setWarning(false);
-      dispatch(setFilter({filterMuseums: !toggleFilterMuseums, filterGardens: toggleFilterGardens}));
-    }else{
-      setWarning(true);
-      setWarningText('You must select one filter at least');
-      setTimeout(() => {
-        setWarning(false);
-      }, 5000);
-    }
-  }
-
-  const filterGardens = () => {
-    if(toggleFilterMuseums){
-      setToggleFilterGardens(!toggleFilterGardens);
-      setWarning(false);
-      dispatch(setFilter({filterMuseums: toggleFilterMuseums, filterGardens: !toggleFilterGardens}));
+      if(elementToFilter == 'museums'){
+        dispatch(setFilterMuseums({filterMuseums: !stateOfElement}));
+      }
+      if(elementToFilter == 'gardens'){
+        dispatch(setFilterGardens({filterGardens: !stateOfElement}));
+      }
     }else{
       setWarning(true);
       setWarningText('You must select one filter at least');
@@ -101,9 +73,8 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
     if(toggleWeather.enable){
       const weatherDayIndex = toggleWeather.days.map(day => day.enable).indexOf(true);
       if(weatherDayIndex != -1 && weather5Days[weatherDayIndex].weather[0].id < 800){
-        setToggleFilterGardens(false);
-        setToggleFilterMuseums(true);
-        dispatch(setFilter({filterMuseums: true, filterGardens: false}));
+        dispatch(setFilterMuseums({filterMuseums: true}));
+        dispatch(setFilterGardens({filterGardens: false}));
         setWarning(true);
         setWarningText('We recommand you to not visit gardens this day');
         setTimeout(() => {
@@ -119,15 +90,15 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
     <SearchBarWrapper>
       <FiltersWrapper>
         <BoxFilterContainer
-          onClick={filterMuseums}
-          style={toggleFilterMuseums ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
+          onClick={() => filterMuseumsGardens('museums',filterMuseums,filterGardens)}
+          style={filterMuseums ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
           >
           <MdOutlineMuseum />
           Musées
         </BoxFilterContainer>
         <BoxFilterContainer
-          onClick={filterGardens}
-          style={toggleFilterGardens ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
+          onClick={() => filterMuseumsGardens('gardens',filterGardens,filterMuseums)}
+          style={filterGardens ? {backgroundColor: '#12B5CB', color: 'white'} : {}}
           >
           <LuFlower2 />
           Jardins
@@ -153,7 +124,6 @@ const SearchBarWrapper = styled.div`
   left: 60%;
   display: flex;
   flex-direction: column;
-  /* background-color: white; */
 `;
 const FiltersWrapper = styled.div`
   display: flex;
