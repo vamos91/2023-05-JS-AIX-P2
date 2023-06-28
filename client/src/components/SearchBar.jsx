@@ -10,21 +10,62 @@ const fetchMusee = async (apiQuery) => {
   return fetchjson.records;
 };
 
-const SearchBar = ({ musees, setMusees, perimeter, setPerimeter, center }) => {
-
+const SearchBar = ({
+  musees,
+  setMusees,
+  perimeter,
+  setPerimeter,
+  center,
+  setCenter,
+  userLoc,
+  setUserLoc,
+}) => {
   useEffect(() => {
-    (async() => {
-      const fetchjson = await fetchMusee('ville_m=Marseille');
+    (async () => {
+      const fetchjson = await fetchMusee("ville_m=Marseille");
       setMusees(fetchjson);
     })();
+    if ("geolocation" in navigator) {
+     
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("position");
+        console.log({
+          lng: position.coords.longitude,
+          lat: position.coords.latitude,
+        } );
+        setCenter({
+          lng: position.coords.longitude,
+          lat: position.coords.latitude,
+        });
+      });
+      setUserLoc(true);
+    }
+   
   }, []);
 
   useEffect(() => {
-    (async() => {
-      const fetchjson = await fetchMusee(`&geofilter.distance=${center.lat},${center.lng},${perimeter}`);
+    console.log("center");
+    console.log(center);
+       if (userLoc) {
+      // navigator.geolocation.getCurrentPosition((position) => {
+      //   console.log("position");
+      //   console.log({
+      //     lng: position.coords.longitude,
+      //     lat: position.coords.latitude,
+      //   } );
+      //   setCenter({
+      //     lng: position.coords.longitude,
+      //     lat: position.coords.latitude,
+      //   });
+      // });
+    }
+    (async () => {
+      const fetchjson = await fetchMusee(
+        `&geofilter.distance=${center.lat},${center.lng},${perimeter}`
+      );
       setMusees(fetchjson);
     })();
-  }, [perimeter]);
+  }, [perimeter, userLoc]);
 
   return (
     <SearchBarWrapper>

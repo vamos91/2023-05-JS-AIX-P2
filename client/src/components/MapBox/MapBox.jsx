@@ -6,19 +6,15 @@ import "./mapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import PopUp from "./PopUp";
 
-const MapBox = ({ museums, perimeter, setCenter, center }) => {
-  // console.log(museums);
-  // console.log(center.lng);
+const MapBox = ({ museums, perimeter, setCenter, center, loc }) => {
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
-  // const marseilleLng = 5.36978;
-  // const marseilleLat = 43.296482;
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [mapInit, setMapInit] = useState(false);
   const [zoom, setZoom] = useState(12);
   const [lngLat, setLngLat] = useState();
   const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }));
-  // console.log(lngLat);
+
   const mapData = museums.map((record) => {
     return {
       type: "Feature",
@@ -39,15 +35,10 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
         coordinates: [
           record.fields.geolocalisation_latlong[1],
           record.fields.geolocalisation_latlong[0],
-        ], //[-77.038659, 38.931567],
+        ],
       },
     };
   });
-  // console.log("RECU")
-  // console.log("mapData");
-  // console.log(mapData);
-  // console.log("museums");
-  // console.log(museums);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -102,10 +93,10 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
               "icon-allow-overlap": true,
             },
           });
-        } //
-      ); //
+        }
+      );
 
-      // // Create a popup, but don't add it to the map yet.
+      // Create a popup, but don't add it to the map yet.
       const popup = new mapboxgl.Popup({
         closeButton: true,
         closeOnClick: true,
@@ -113,21 +104,12 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
         maxWidth: "200px",
       });
 
-      // const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }))
-
-      // map.current.on("mouseenter", "places", async (e) => {
       map.current.on("click", "places", async (e) => {
-        // console.log(e.features[0].properties);
-        // console.log("onmouseenter-before");
-        // console.log(e.features[0].properties.id);
-        // console.log(activePopup);
-
         // Change the cursor style as a UI indicator.
         map.current.getCanvas().style.cursor = "pointer";
 
         // Copy coordinates array.
         const coordinates = e.features[0].geometry.coordinates.slice();
-        // const description = e.features[0].properties.description;
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
@@ -146,8 +128,6 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
             .setDOMContent(popupNode)
             .addTo(map.current);
         }
-        // add mapBox PopUp
-        // popup.setLngLat(coordinates).setHTML(description).addTo(map.current);
 
         // Populate the popup and set its coordinates
         // based on the feature found.
@@ -169,26 +149,25 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
       map.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
     });
     // Move map to users location if permission
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        map.current.flyTo({
-          center: [position.coords.longitude, position.coords.latitude],
-          essential: true, // this animation is considered essential with respect to prefers-reduced-motion
-        });
-        setCenter({
-          lng: position.coords.longitude,
-          lat: position.coords.latitude,
-        });
-      });
-    }
+    // if ("geolocation" in navigator) {
+    //   navigator.geolocation.getCurrentPosition((position) => {
+    //     map.current.flyTo({
+    //       center: [position.coords.longitude, position.coords.latitude],
+    //       essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+    //     });
+    //     setCenter({
+    //       lng: position.coords.longitude,
+    //       lat: position.coords.latitude,
+    //     });
+    //   });
+    // }
     setMapInit(true);
   }, []);
-  // console.log(navigator);
-  // console.log(mapInit);
+
   useEffect(() => {
-    console.log("perimeter changed to :" + perimeter);
-    console.log("mapdata useff2 if false");
-    console.log(mapData);
+    console.log("MapBox UE2 [perimetre] center");
+    console.log(center);
+    console.log("MapBox UE2 [perimetre] museums");
     console.log(museums);
     if (mapInit) {
       // Calcul le zoom par rapport au périmètre et au centre
@@ -201,16 +180,25 @@ const MapBox = ({ museums, perimeter, setCenter, center }) => {
           Math.log(metersPerPixel)) /
           Math.LN2 -
         8;
-
+      map.current.flyTo({
+        center: [center.lng, center.lat],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      });
       map.current.setZoom(zoom);
       setCenter(map.current.getCenter());
 
-      console.log(map.current.getSource("places"));
-      console.log("mapdata useff2 if true");
-      console.log("mapData");
-      console.log(mapData);
-      console.log("museums");
-      console.log(museums);
+      // if(loc){
+      // map.current.flyTo({
+      //   center: [center.lng, center.lat],
+      //   essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      // });
+      // setCenter(map.current.getCenter());
+      // }
+      // setCenter({
+      //   lng: position.coords.longitude,
+      //   lat: position.coords.latitude,
+      // });
+
       if (map.current.getSource("places")) {
         map.current.getSource("places").setData({
           type: "FeatureCollection",
