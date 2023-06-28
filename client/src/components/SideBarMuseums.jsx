@@ -2,6 +2,7 @@ import React from "react";
 import MuseumListCard from "./MuseumListCard";
 import styled from "styled-components";
 import Spinner  from "./Spinner";
+import {useSelector} from 'react-redux';
 
 const SideBar = styled.div`
   position: fixed;
@@ -26,7 +27,9 @@ const SideBar = styled.div`
 
 `;
 
-const SideBarMuseums = ({ musees, isLoading }) => {
+const SideBarMuseums = ({ isLoading }) => {
+  const musees = useSelector(state => state.records.mixed);
+
   return (
     <SideBar>
       {isLoading ? (

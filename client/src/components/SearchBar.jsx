@@ -1,26 +1,70 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {useDispatch} from 'react-redux';
+import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords} from '../features/museum/recordsAPISlice';
+import RangeBar from "./RangeBar";
+import Weather from "./Weather/Weather";
+import WeatherForecast from "./Weather/WeatherForecast";
 
-const SearchBar = ({ musees, setMusees, setLoading }) => {
+const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
+  const [toggleWeather, setToggleWeather] = useState({
+    enable: false,
+    days : [
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false},
+      {enable: false}
+    ]
+  });
+  const dispatch = useDispatch();
+  const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
+  const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
+
+  const fetchMusee = async (url, reducerDispatch) => {
+    const returnFetch = await fetch(url);
+    const fetchjson = await returnFetch.json();
+    console.log('toto',fetchjson)
+    dispatch(reducerDispatch(fetchjson));
+  };
+
   useEffect(() => {
     setLoading(true);
-    const fetchMusee = async () => {
-      const returnFetch = await fetch(
-        "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=ville_m=Marseille"
-        //  "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile&q=&rows=100&facet=dompal&facet=region"
-      );
-      const fetchjson = await returnFetch.json();
-      setMusees(fetchjson.records);
-      // console.log(fetchjson.records)
-    };
-    fetchMusee();
-    // const timer = setTimeout(() => {
+
+    const firstFetchMixed = async () => {
+      await fetchMusee(
+        urlBasicMuseums+"&q=ville_m=Marseille", 
+        newMuseumsRecordsAPI);
+      await fetchMusee(
+        urlBasicGardens+"&q=commune=Marseille", 
+        newGardensRecordsAPI);
+
+      dispatch(mixeRecords());
+    }
+    
+    firstFetchMixed();
+
     setLoading(false);
-    // }, 2000);
-    // return () => clearTimeout(timer);
   }, []);
 
-  return <SearchBarWrapper>SEARCHBAR</SearchBarWrapper>;
+  useEffect(() => {
+    (async() => {
+      await fetchMusee(urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, newMuseumsRecordsAPI);
+    })();
+  }, [perimeter]);
+
+  return (
+    <SearchBarWrapper>
+      <FiltersWrapper>
+        <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
+        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+      </FiltersWrapper>
+      <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
+        <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+      </div> 
+    </SearchBarWrapper>
+  );
 };
 
 export default SearchBar;
@@ -29,5 +73,11 @@ const SearchBarWrapper = styled.div`
   position: absolute;
   top: 10px;
   left: 60%;
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  /* background-color: white; */
+`;
+const FiltersWrapper = styled.div`
+  display: flex;
+  margin: 10px 0;
 `;
