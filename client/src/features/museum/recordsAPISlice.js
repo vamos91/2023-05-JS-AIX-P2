@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import distance from '@turf/distance';
 
 export const recordsAPISlice = createSlice({
     name: 'records',
@@ -37,8 +38,31 @@ export const recordsAPISlice = createSlice({
                 geometry: record.geometry
             })});
         },
-        mixeRecords: (state) => {
-            state.mixed = [...state.museums, ...state.gardens];
+        mixeRecords: (state, action) => {
+            state.mixed = [];
+            let indexGarden = 0;
+            let indexMuseum = 0;
+            while(indexMuseum < state.museums.length && indexGarden < state.gardens.length){
+                const distanceCenterToMuseum = distance([action.payload.lng, action.payload.lat],state.museums[indexMuseum].geometry.coordinates);
+                const distanceCenterToGarden = distance([action.payload.lng, action.payload.lat],state.gardens[indexGarden].geometry.coordinates);
+                if(distanceCenterToGarden < distanceCenterToMuseum){
+                    state.mixed.push(state.gardens[indexGarden]);
+                    indexGarden++;
+                }else{
+                    state.mixed.push(state.museums[indexMuseum]);
+                    indexMuseum++;
+                }
+            };
+            while(indexMuseum < state.museums.length){
+                state.mixed.push(state.museums[indexMuseum]);
+                indexMuseum++;
+            } 
+            while(indexGarden < state.gardens.length){
+                state.mixed.push(state.gardens[indexGarden]);
+                indexGarden++;
+            }
+            console.log('mixed',state.mixed)
+            // state.mixed = [...state.museums, ...state.gardens];
         },
         setFilterMuseums: (state, action) => {
             state.filterMuseums = action.payload.filterMuseums;

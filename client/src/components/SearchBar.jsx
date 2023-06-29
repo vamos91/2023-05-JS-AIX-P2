@@ -49,7 +49,7 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, userLoc, setUserLoc })
         urlBasicGardens+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, 
         newGardensRecordsAPI);
 
-      dispatch(mixeRecords());
+      dispatch(mixeRecords(center));
     }
 
     setLoading(true);
