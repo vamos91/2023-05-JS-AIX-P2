@@ -50,7 +50,7 @@ const WeatherForecast = ({toggleWeather, setToggleWeather, center, weather5Days,
         return function cleanup() {
             controller.abort();
         }
-    },[center]);
+    },[]);
 
     const toogleWeatherBox = (index) => {
         const tmp = toggleWeather.days.map((day,i) => i == index ? {enable: !day.enable} : {enable: false});

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {useDispatch, useSelector} from 'react-redux';
 import {newMuseumsRecordsAPI, newGardensRecordsAPI, mixeRecords, setFilterMuseums, setFilterGardens} from '../features/museum/recordsAPISlice';
+import { setCenterRedux } from "../features/mapBox/mapBoxAPISlice";
 import RangeBar from "./RangeBar";
 import Weather from "./Weather/Weather";
 import WeatherForecast from "./Weather/WeatherForecast";
 import {MdOutlineMuseum} from 'react-icons/md';
 import { LuFlower2 } from "react-icons/lu";
 
-const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
+const SearchBar = ({ setLoading, perimeter, setPerimeter, userLoc, setUserLoc }) => {
   const filterMuseums = useSelector(state => state.records.filterMuseums);
   const filterGardens = useSelector(state => state.records.filterGardens);
   const [warning, setWarning] = useState(false);
@@ -26,13 +27,16 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
   });
   const [weather5Days, setWeather5Days] = useState();
   const dispatch = useDispatch();
-  const urlBasicMuseums = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
-  const urlBasicGardens = "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
+  const center = useSelector((state) => state.mapbox.center);
+  const urlBasicMuseums =
+    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=musees-de-france-base-museofile";
+  const urlBasicGardens =
+    "https://data.culture.gouv.fr/api/records/1.0/search/?dataset=liste-des-jardins-remarquables";
 
   const fetchMusee = async (url, reducerDispatch) => {
     const returnFetch = await fetch(url);
     const fetchjson = await returnFetch.json();
-    console.log('toto',fetchjson)
+    console.log("toto", fetchjson);
     dispatch(reducerDispatch(fetchjson));
   };
 
@@ -47,9 +51,29 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
 
       dispatch(mixeRecords());
     }
+
+    setLoading(true);
+    
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("position");
+        console.log({
+          lng: position.coords.longitude,
+          lat: position.coords.latitude,
+        });
+        dispatch(
+          setCenterRedux({
+            lng: position.coords.longitude,
+            lat: position.coords.latitude,
+          })
+        );
+        setUserLoc(true);
+      });
+    }
+    
     firstFetchMixed();
     setLoading(false);
-  }, [perimeter]);
+  }, [perimeter, userLoc]);
 
   const filterMuseumsGardens = (elementToFilter, stateOfElement, stateOfOther) => {
     if(stateOfOther){
@@ -104,7 +128,11 @@ const SearchBar = ({ setLoading, perimeter, setPerimeter, center }) => {
           Jardins
         </BoxFilterContainer>
         <RangeBar perimeter={perimeter} setPerimeter={setPerimeter} />
-        <Weather toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} center={center} />
+        <Weather
+          toggleWeather={toggleWeather}
+          setToggleWeather={setToggleWeather}
+          center={center}
+        />
       </FiltersWrapper>
       <div style={toggleWeather.enable ? {display: "block"} : {display: "none"}}>
         <WeatherForecast toggleWeather={toggleWeather} setToggleWeather={setToggleWeather} weather5Days={weather5Days} setWeather5Days={setWeather5Days} center={center} />
