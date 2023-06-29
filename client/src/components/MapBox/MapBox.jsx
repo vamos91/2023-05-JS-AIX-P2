@@ -8,8 +8,9 @@ import PopUp from "./PopUp";
 import { useDispatch } from "react-redux";
 import { setCenterRedux } from "../../features/mapBox/mapBoxAPISlice";
 import { useSelector } from "react-redux";
+import distance from "@turf/distance";
 
-const MapBox = ({ museums, perimeter, loc }) => {
+const MapBox = ({ perimeter, loc }) => {
   const dispatch = useDispatch();
   const musees = useSelector((state) => state.records.mixed);
   const center = useSelector((state) => state.mapbox.center);
@@ -21,7 +22,7 @@ const MapBox = ({ museums, perimeter, loc }) => {
   const [lngLat, setLngLat] = useState();
   const popUpRef = useRef(new mapboxgl.Popup({ offset: 15 }));
   console.log("musees redux", musees);
-  const mapData = museums.map((record) => {
+  const mapData = musees.map((record) => {
     return {
       type: "Feature",
       properties: {
@@ -63,7 +64,16 @@ const MapBox = ({ museums, perimeter, loc }) => {
 
     map.current.on("move", () => {
       const centerMap = map.current.getCenter();
-      console.log("onmove", centerMap);
+      console.log("onmove actual center", centerMap);
+      console.log("onmove redux center", center);
+      console.log(map.current.getBounds());
+      // [-75.343, 39.984]
+      let inPerimeter = distance(
+        [center.lng, center.lat],
+        [centerMap.lng, centerMap.lat],
+        { units: "metres" }
+      );
+      console.log(inPerimeter);
       dispatch(setCenterRedux({ lng: centerMap.lng, lat: centerMap.lat }));
       setZoom(map.current.getZoom().toFixed(2));
     });
@@ -176,7 +186,7 @@ const MapBox = ({ museums, perimeter, loc }) => {
     console.log("MapBox UE2 [perimetre] center");
     console.log(center);
     console.log("MapBox UE2 [perimetre] museums");
-    console.log(museums);
+    console.log(musees);
     console.log("MapBox UE2 [perimetre] perimeter");
     console.log(perimeter);
 
@@ -185,17 +195,18 @@ const MapBox = ({ museums, perimeter, loc }) => {
       const mapSize = map.current.getCanvas();
       const maxPixels =
         mapSize.width > mapSize.height ? mapSize.height / 2 : mapSize.width / 2;
-      const metersPerPixel = perimeter*2 / maxPixels;
+      const metersPerPixel = (perimeter * 2) / maxPixels;
       const zoom =
         (Math.log(40075016.686 * Math.cos((7.25 * Math.PI) / 180)) -
           Math.log(metersPerPixel)) /
           Math.LN2 -
         8;
+      map.current.setZoom(zoom);
       map.current.flyTo({
         center: [center.lng, center.lat],
         essential: true, // this animation is considered essential with respect to prefers-reduced-motion
       });
-      map.current.setZoom(zoom);
+
       // setCenter(map.current.getCenter());
       const centerMap = map.current.getCenter();
       console.log(centerMap);
@@ -213,7 +224,7 @@ const MapBox = ({ museums, perimeter, loc }) => {
         });
       }
     }
-  }, [museums]);
+  }, [musees]);
 
   return <MapWrapper ref={mapContainer} className="map-container"></MapWrapper>;
 };

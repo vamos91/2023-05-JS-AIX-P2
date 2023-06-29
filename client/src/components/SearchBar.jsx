@@ -44,8 +44,7 @@ const SearchBar = ({
   };
 
   useEffect(() => {
-
-    // setLoading(true);
+    setLoading(true);
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log("position");
@@ -53,14 +52,12 @@ const SearchBar = ({
           lng: position.coords.longitude,
           lat: position.coords.latitude,
         });
-        // setCenter({
-        //   lng: position.coords.longitude,
-        //   lat: position.coords.latitude,
-        // });
-       dispatch(setCenterRedux({
-        lng: position.coords.longitude,
-        lat: position.coords.latitude,
-      }));
+        dispatch(
+          setCenterRedux({
+            lng: position.coords.longitude,
+            lat: position.coords.latitude,
+          })
+        );
         setUserLoc(true);
       });
     }
@@ -97,12 +94,8 @@ const SearchBar = ({
       dispatch(mixeRecords());
     };
     perimeterFetchMixed();
-
-    // (async() => {
-    //   await fetchMusee(urlBasicMuseums+`&geofilter.distance=${center.lat},${center.lng},${perimeter}`, newMuseumsRecordsAPI);
-
-    // })();
   }, [perimeter, userLoc]);
+  
   return (
     <SearchBarWrapper>
       <FiltersWrapper>

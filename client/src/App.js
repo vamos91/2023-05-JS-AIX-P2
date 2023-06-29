@@ -54,7 +54,7 @@ function App() {
       />
       {musees && <SideBarMuseums isLoading={loading} />}
       {musees && (
-        <MapBox museums={musees} perimeter={perimeter} loc={userLocalisation} />
+        <MapBox perimeter={perimeter} loc={userLocalisation} />
       )}
     </div>
   );
