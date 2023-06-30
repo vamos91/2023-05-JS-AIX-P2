@@ -39,7 +39,7 @@ const Weather = ({toggleWeather, setToggleWeather, center}) => {
         return function cleanup() {
             controller.abort();
         }
-    },[center]);
+    },[]);
     return (
         <WeatherContainer 
             onClick={() => setToggleWeather(previous => ({ ...previous, enable: !previous.enable}))} 
