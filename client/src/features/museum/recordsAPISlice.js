@@ -62,7 +62,6 @@ export const recordsAPISlice = createSlice({
                 indexGarden++;
             }
             console.log('mixed',state.mixed)
-            // state.mixed = [...state.museums, ...state.gardens];
         },
         setFilterMuseums: (state, action) => {
             state.filterMuseums = action.payload.filterMuseums;
